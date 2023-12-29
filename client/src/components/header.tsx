@@ -98,15 +98,12 @@ const GGGjjhshhhs = styled(Link)`
   transition-property: scale;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.15s;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
   background-color: #fff;
   border-radius: 9999px;
   justify-content: center;
   align-items: center;
   display: inline-flex;
+  padding: 10px 20px;
 
   h1 {
     &.active-link {
