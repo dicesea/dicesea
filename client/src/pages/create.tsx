@@ -1,0 +1,355 @@
+import styled from "styled-components";
+import { Seo } from "@/components/seo";
+import Layout from "@/components/layout";
+import { FormEvent, useState, useRef, useEffect } from "react";
+import {
+  capitalizeFirstLetter,
+  categories,
+  replaceSpacesWithHyphens,
+  trimInputSpaces,
+} from "@/utils";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { initWeb5, setLoading } from "@/methods/features/marketplaceSlice";
+import { useAppDispatch } from "@/methods/app/hooks";
+import { Web5 } from "@web5/api";
+import { CREATE_RECORD } from "../querys/graphql";
+import { useMutation } from "@apollo/client";
+import { toast } from "@/components/toast";
+import { lowerCase } from "lodash-es";
+
+const SSection = styled.section`
+  background-color: #fff;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin: 100px auto 50px;
+`;
+
+const Button = styled.button`
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  font-style: normal;
+  color: #ffffff;
+  border: 0;
+  width: 100%;
+  height: 45px;
+  cursor: pointer;
+  background: #0069ff;
+  border-radius: 50px;
+  margin-top: 30px;
+`;
+
+const Title = styled.h1`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+`;
+
+const Label = styled.label`
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  color: #000;
+  margin-top: 20px;
+`;
+
+const Span = styled.span`
+  font-weight: 500;
+  font-size: 12px;
+  display: flex;
+  color: #000;
+  margin: 10px 0px;
+`;
+
+const Form = styled.form`
+  display: grid;
+`;
+
+const Wrapper = styled.div``;
+
+const Input = styled.input`
+  font-size: 16px;
+  border: 2px solid rgb(229, 232, 235);
+  background-color: transparent;
+  border-radius: 10px;
+  margin-top: 5px;
+  width: 100%;
+  height: 50px;
+`;
+
+const Textarea = styled.textarea`
+  font-size: 1rem;
+  border: 2px solid rgb(229, 232, 235);
+  background-color: transparent;
+  border-radius: 10px;
+  resize: vertical;
+  margin-top: 5px;
+  height: auto;
+  width: 100%;
+`;
+
+const ImageWrapper = styled.div`
+  margin-top: 10px;
+  height: 260px;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  cursor: pointer;
+  border: 3px dashed rgb(204, 204, 204);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 640px) {
+    max-width: 350px;
+  }
+
+  img {
+    border-radius: 10px;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  img:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    background-color: transparent;
+  }
+`;
+
+const FileInput = styled.input`
+  display: none;
+`;
+
+const Select = styled.select`
+  font-size: 1rem;
+
+  border: 2px solid rgb(229, 232, 235);
+  background-color: transparent;
+  border-radius: 10px;
+  resize: vertical;
+  margin-top: 5px;
+  height: auto;
+  width: 100%;
+  padding: 12px;
+`;
+
+export default function Create() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(initWeb5());
+    })();
+  }, [dispatch]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [collection, setCollection] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  const [price, setPrice] = useState<string | null>(null);
+
+  const onChange = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const onPreview = (event: any) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      setImage(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Use the useMutation hook to create data
+  const [createRecord, { loading }] = useMutation(CREATE_RECORD);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const { did } = await Web5.connect({ sync: "5s" });
+
+    const trimmedName = trimInputSpaces(name || "");
+    const trimmedDescription = trimInputSpaces(description || "");
+    const trimmedImage = trimInputSpaces(image || "");
+    const trimmedCategory = trimInputSpaces(category || "");
+    const trimmedPrice = trimInputSpaces(price || "");
+
+    if (
+      !trimmedName ||
+      !trimmedDescription ||
+      !trimmedImage ||
+      !trimmedCategory ||
+      !trimmedPrice
+    ) {
+      return toast({
+        message: "Please fill out all fields",
+        position: "top",
+      });
+    }
+
+    try {
+      const record = {
+        name: trimmedName,
+        description: trimmedDescription,
+        price: trimmedPrice,
+        imageUrl: trimmedImage,
+        category: trimmedCategory,
+        creator: did,
+        owner: did,
+        user: {
+          _id: did,
+          name: did,
+          description: did,
+          profileImage: trimmedImage,
+          bannerImage: trimmedImage,
+        },
+      };
+
+      const { data } = await createRecord({
+        variables: { record: record },
+      });
+
+      // Check if the operation was successful
+      if (data && data.createRecord) {
+        toast({ message: "Created", position: "top" });
+        dispatch(setLoading(false));
+
+        // Perform any additional actions after successful creation
+        router.push("/profile");
+      } else {
+        // Handle the case where the operation failed
+        toast({ message: "Failed", position: "top" });
+        dispatch(setLoading(false));
+      }
+    } catch (error) {
+      console.error(error);
+      toast({ message: "Failed", position: "top" });
+      dispatch(setLoading(false));
+    }
+  };
+
+  return (
+    <Layout>
+      <Seo
+        title="Create | DiceSea"
+        description="DiceSea is a marketplace for everyone."
+      />
+      <SSection>
+        <Container>
+          <Title>Create New Record</Title>
+          <Form onSubmit={handleSubmit}>
+            <Wrapper>
+              <Label htmlFor="image">Image, Video, or Audio</Label>
+              <Span>
+                File types supported: JPG, PNG, GIF, SVG, MP3. Max size: 100 MB
+              </Span>
+              <ImageWrapper onClick={onChange}>
+                <FileInput
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                  onChange={onPreview}
+                />
+                {!image && (
+                  <Image
+                    src="/images/upload.svg"
+                    alt="Upload"
+                    height={100}
+                    width={100}
+                    priority
+                  />
+                )}
+                {image && (
+                  <Image
+                    src={image}
+                    alt="Preview"
+                    height={100}
+                    width={100}
+                    priority
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                )}
+              </ImageWrapper>
+            </Wrapper>
+            <Wrapper>
+              <Label htmlFor="name">Name</Label>
+              <Input
+                placeholder="Record name"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
+              />
+            </Wrapper>
+            <Wrapper>
+              <Label htmlFor="Description">Description</Label>
+              <Textarea
+                placeholder="Record description"
+                rows={3}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Wrapper>
+            <Wrapper>
+              <Label htmlFor="Price">Price</Label>
+              <Input
+                placeholder="Record price"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setPrice(e.target.value)
+                }
+              />
+            </Wrapper>
+            {/* <Wrapper>
+              <Label htmlFor="collection">Collection</Label>
+              <Input
+                placeholder="Record collection"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCollection(e.target.value)
+                }
+              />
+            </Wrapper> */}
+            <Wrapper>
+              <Label htmlFor="category">Category</Label>
+              <Select
+                defaultValue=""
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {capitalizeFirstLetter(category.value)}
+                  </option>
+                ))}
+              </Select>
+            </Wrapper>
+
+            <Button type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create"}
+            </Button>
+          </Form>
+        </Container>
+      </SSection>
+    </Layout>
+  );
+}

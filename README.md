@@ -1,1 +1,1 @@
-DiceSea Website
+DiceSea
