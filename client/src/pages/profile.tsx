@@ -24,9 +24,22 @@ const G2ERfT5gTR = styled.div`
   background-repeat: no-repeat;
   height: 450px;
   position: relative;
-  border-radius: 20px;
   overflow: hidden;
-  margin: 100px 30px 0px;
+
+  @media (min-width: 414px) {
+    border-radius: 0px;
+    margin: 80px 0px;
+  }
+
+  @media (min-width: 360px) {
+    border-radius: 0px;
+    margin: 80px 0px;
+  }
+
+  @media (min-width: 1280px) {
+    border-radius: 30px;
+    margin: 100px 30px 0px;
+  }
 
   h5 {
     position: absolute;
