@@ -21,6 +21,10 @@ const Container = styled.section`
     padding: 0 1.5rem;
   }
 
+  @media (min-width: 360px) {
+    padding: 0 1.5rem;
+  }
+
   // Desktop
   @media (min-width: 1280px) {
     padding: 0 10rem;
@@ -112,9 +116,13 @@ const Button = styled.button`
     width: 100%;
   }
 
+  @media (min-width: 360px) {
+    width: 100%;
+  }
+
   // Desktop
   @media (min-width: 1280px) {
-    width: 70%;
+    width: 100%;
   }
 `;
 
