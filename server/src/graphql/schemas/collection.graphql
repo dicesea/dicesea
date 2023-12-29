@@ -1,0 +1,75 @@
+type Query {
+  getCollections: [Collection]
+  getCollection(slug: String!): Collection
+  getItem(id: String!): Item
+  getOwnerCollections(owner: String!): [Collection]
+}
+
+type Mutation {
+  createCollection(collection: NewCollectionInput!): String!
+  updateCollection(_id: ID!, collection: UpdateCollectionInput!): String!
+  deleteCollection(_id: ID!): String!
+}
+
+type Item {
+  id: ID!
+  name: String!
+  price: String!
+  description: String!
+  imageUrl: String!
+  owner: String!
+  creator: String!
+  collection: String!
+}
+
+type Collection {
+  _id: ID!
+  name: String!
+  slug: String!
+  description: String!
+  category: Category!
+  creator: String!
+  owner: String!
+  bannerImage: String!
+  profileImage: String!
+  items: [Item!]
+}
+
+enum Category {
+  ART
+  MUSIC
+  BOOK
+}
+
+input ItemInput {
+  name: String!
+  price: String!
+  description: String!
+  imageUrl: String!
+  creator: String!
+  owner: String!
+  collection: String!
+}
+
+input NewCollectionInput {
+  name: String!
+  slug: String!
+  description: String!
+  category: Category!
+  creator: String!
+  owner: String!
+  bannerImage: String!
+  profileImage: String!
+  items: [ItemInput!]
+}
+
+input UpdateCollectionInput {
+  name: String
+  slug: String
+  description: String
+  category: Category
+  creator: String
+  bannerImage: String
+  profileImage: String
+  items: [ItemInput!]
+}

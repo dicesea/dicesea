@@ -1,0 +1,83 @@
+type Query {
+  getPendingRecords(status: RecordStatus): [Record]
+  getApprovedRecords(status: RecordStatus): [Record]
+  getRejectedRecords(status: RecordStatus): [Record]
+  getRecord(_id: ID!): Record
+  getOwnerRecords(owner: String!): [Record]
+}
+
+type Mutation {
+  createRecord(record: NewRecordInput!): Record
+  updateRecord(_id: ID!, record: UpdateRecordInput!): Record
+  deleteRecord(_id: ID!): Record
+  approveRecord(_id: ID!): Record
+  rejectRecord(_id: ID!): Record
+}
+
+type User {
+  _id: ID!
+  name: String!
+  description: String!
+  profileImage: String!
+  bannerImage: String!
+  role: UserRole!
+}
+
+type Record {
+  _id: ID!
+  name: String!
+  description: String!
+  imageUrl: String!
+  price: String!
+  category: Category!
+  status: RecordStatus!
+  owner: String!
+  creator: String!
+  user: User!
+}
+
+enum Category {
+  ART
+  MUSIC
+  BOOK
+}
+
+enum RecordStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+input UserInput {
+  _id: ID!
+  name: String!
+  description: String!
+  profileImage: String!
+  bannerImage: String!
+}
+
+input NewRecordInput {
+  name: String!
+  description: String!
+  imageUrl: String!
+  price: String!
+  category: Category!
+  owner: String!
+  creator: String!
+  user: UserInput!
+}
+
+input UpdateRecordInput {
+  name: String!
+  description: String!
+  imageUrl: String!
+  price: String!
+  category: Category!
+  owner: String!
+  creator: String!
+}
