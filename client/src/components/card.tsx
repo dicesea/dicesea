@@ -164,6 +164,11 @@ const Heading = styled.h2`
     padding: 0px 30px;
   }
 
+  // Small
+  @media (min-width: 360px) {
+    padding: 0px 30px;
+  }
+
   // Medium
   @media (min-width: 1280px) {
     padding: 0px 40px;
@@ -178,6 +183,12 @@ const Grid = styled.div`
 
   // Small
   @media (min-width: 414px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    padding: 30px;
+  }
+
+  // Small
+  @media (min-width: 360px) {
     grid-template-columns: repeat(1, minmax(0, 1fr));
     padding: 30px;
   }
