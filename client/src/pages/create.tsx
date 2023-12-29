@@ -2,12 +2,7 @@ import styled from "styled-components";
 import { Seo } from "@/components/seo";
 import Layout from "@/components/layout";
 import { FormEvent, useState, useRef, useEffect } from "react";
-import {
-  capitalizeFirstLetter,
-  categories,
-  replaceSpacesWithHyphens,
-  trimInputSpaces,
-} from "@/utils";
+import { capitalizeFirstLetter, categories, trimInputSpaces } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { initWeb5, setLoading } from "@/methods/features/marketplaceSlice";
@@ -16,7 +11,6 @@ import { Web5 } from "@web5/api";
 import { CREATE_RECORD } from "../querys/graphql";
 import { useMutation } from "@apollo/client";
 import { toast } from "@/components/toast";
-import { lowerCase } from "lodash-es";
 
 const SSection = styled.section`
   background-color: #fff;
@@ -50,6 +44,23 @@ const Title = styled.h1`
   font-style: normal;
   font-weight: 700;
   font-size: 40px;
+
+  @media (min-width: 414px) {
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  // Small
+  @media (min-width: 360px) {
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  // Medium
+  @media (min-width: 1280px) {
+    font-weight: 700;
+    font-size: 35px;
+  }
 `;
 
 const Label = styled.label`
@@ -70,6 +81,20 @@ const Span = styled.span`
 
 const Form = styled.form`
   display: grid;
+
+  @media (min-width: 414px) {
+    padding: 0px 20px;
+  }
+
+  // Small
+  @media (min-width: 360px) {
+    padding: 0px 20px;
+  }
+
+  // Medium
+  @media (min-width: 1280px) {
+    padding: 0px;
+  }
 `;
 
 const Wrapper = styled.div``;
