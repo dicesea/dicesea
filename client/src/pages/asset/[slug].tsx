@@ -10,23 +10,23 @@ import Network from "@/components/network";
 import { Progress } from "@/components/progress";
 import Error from "@/components/error";
 import { GET_RECORD } from "@/querys/graphql";
-import { capitalizeFirstLetter, removeDidPrefix, shortDid } from "@/utils";
-import { upperFirst } from "lodash-es";
+import { capitalizeFirstLetter, shortDid } from "@/utils";
 
 const Container = styled.section`
   margin: 140px 0px 50px;
 
-  // Mobile
   @media (min-width: 414px) {
-    padding: 0 1.5rem;
+    padding: 0px;
+    margin: 80px 0px 30px;
   }
 
   @media (min-width: 360px) {
-    padding: 0 1.5rem;
+    padding: 0px;
+    margin: 80px 0px 30px;
   }
 
-  // Desktop
   @media (min-width: 1280px) {
+    margin: 140px 0px 50px;
     padding: 0 10rem;
   }
 `;
@@ -55,11 +55,35 @@ const ImageContainer = styled.div`
     height: 400px;
     border-radius: 20px;
     object-fit: cover;
+
+    @media (min-width: 414px) {
+      border-radius: 0px;
+    }
+
+    @media (min-width: 360px) {
+      border-radius: 0px;
+    }
+
+    @media (min-width: 1280px) {
+      border-radius: 20px;
+    }
   }
 `;
 
 const TextContainer = styled.div`
   flex: 1;
+
+  @media (min-width: 414px) {
+    padding: 20px;
+  }
+
+  @media (min-width: 360px) {
+    padding: 20px;
+  }
+
+  @media (min-width: 1280px) {
+    padding: 0px;
+  }
 
   // Mobile
   @media (min-width: 414px) {
