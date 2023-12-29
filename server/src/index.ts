@@ -10,13 +10,10 @@ import morgan from "morgan";
 
 const app = express();
 
-// Use morgan for logging requests
-app.use(morgan("dev"));
-
 // CORS configuration
 app.use(
   cors({
-    origin: ["https://www.dicesea.io/", "http://localhost:3000"], // Update this with the allowed origin domains
+    origin: ["https://www.dicesea.io", "http://localhost:3000"], // Update this with the allowed origin domains
     methods: ["GET", "POST"], // Update this with the allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Update this with the allowed headers
     credentials: true, // Allow sending cookies across domains
@@ -24,6 +21,9 @@ app.use(
 );
 
 app.use(bodyParser.json({ limit: "10mb" }));
+
+// Use morgan for logging requests
+app.use(morgan("dev"));
 
 const server = new ApolloServer({
   schema,
