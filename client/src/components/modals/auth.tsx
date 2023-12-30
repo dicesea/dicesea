@@ -34,9 +34,15 @@ const ModalContent = styled.div`
 
   label {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     align-items: start;
     justify-items: flex-start;
+    font-size: 13px;
+  }
+
+  small {
+    font-size: 13px;
+    margin-bottom: 5px;
   }
 
   input {
@@ -64,6 +70,7 @@ const ModalContent = styled.div`
 
 const Button = styled.div`
   cursor: pointer;
+  border-bottom: 2px #eee solid;
 `;
 
 enum ModalState {
@@ -163,19 +170,46 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   Login
                 </Button>
               </div>
-              <label>Name</label>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Name</label>
+                <small>Required</small>
+              </div>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <label>Email</label>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Email</label>
+                <small>Required</small>
+              </div>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <label>Password</label>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Password</label>
+                <small>Required</small>
+              </div>
               <input
                 type="password"
                 value={password}
@@ -201,13 +235,31 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     Register
                   </Button>
                 </div>
-                <label>Email</label>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <label>Email</label>
+                  <small>Required</small>
+                </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <label>Password</label>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <label>Password</label>
+                  <small>Required</small>
+                </div>
                 <input
                   type="password"
                   value={password}

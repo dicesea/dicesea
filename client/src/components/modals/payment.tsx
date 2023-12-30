@@ -33,9 +33,15 @@ const ModalContent = styled.div`
 
   label {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     align-items: start;
     justify-items: flex-start;
+    font-size: 13px;
+  }
+
+  small {
+    font-size: 13px;
+    margin-bottom: 5px;
   }
 
   input {
@@ -123,23 +129,56 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               />
             </svg>
           </div>
-          <label>Name on card</label>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <label>Name on card</label>
+            <small>Required</small>
+          </div>
           <input
             type="text"
             value={cardName}
             placeholder="Name on card"
             onChange={(e) => setCardName(e.target.value)}
           />
-          <label>Card number</label>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <label>Card number</label>
+            <small>Required</small>
+          </div>
           <input
             type="text"
             value={cardNumber}
             placeholder="Card number"
             onChange={(e) => setCardNumber(e.target.value)}
           />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              <label>Expiry date</label>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "10px",
+            }}
+          >
+            <div style={{ width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>Expiry date</label>
+                <small>Required</small>
+              </div>
               <input
                 type="text"
                 value={expiryDate}
@@ -147,8 +186,17 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setExpiryDate(e.target.value)}
               />
             </div>
-            <div>
-              <label>CVC/CVV</label>
+            <div style={{ width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label>CVC/CVV</label>
+                <small>Required</small>
+              </div>
               <input
                 type="text"
                 value={cvc}
