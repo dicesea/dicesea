@@ -1,3 +1,4 @@
+import { toast } from "@/components/toast";
 import { ISocial } from "@/interfaces";
 import { toUpper } from "lodash-es";
 
@@ -199,4 +200,20 @@ export function removeDidPrefix(text: string) {
 
 export const handleRefresh = () => {
   window.location.reload();
+};
+
+export const handleSuccess = (message: string, onClose: () => void) => {
+  toast({
+    message: message,
+    position: "bottom",
+  });
+  onClose();
+};
+
+export const handleError = (message: string, onClose: any) => {
+  toast({
+    message: message,
+    position: "bottom",
+  });
+  onClose();
 };

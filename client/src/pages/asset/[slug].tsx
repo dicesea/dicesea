@@ -4,13 +4,14 @@ import { useRouter } from "next/router";
 import { Seo } from "@/components/seo";
 import Layout from "@/components/layout";
 import { toast } from "@/components/toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NetworkStatus, useQuery } from "@apollo/client";
 import Network from "@/components/network";
 import { Progress } from "@/components/progress";
 import Error from "@/components/error";
 import { GET_RECORD } from "@/querys/graphql";
 import { capitalizeFirstLetter, shortDid } from "@/utils";
+import Payment from "@/components/modals/payment";
 
 const Container = styled.section`
   margin: 140px 0px 50px;
@@ -154,6 +155,8 @@ export default function Slug() {
   const router = useRouter();
   const { slug } = router.query;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { loading, error, data, refetch, networkStatus } = useQuery(
     GET_RECORD,
     {
@@ -181,11 +184,12 @@ export default function Slug() {
 
   const record = data.getRecord;
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const handlePayment = () => {
-    return toast({
-      message: "Comming soon",
-      position: "bottom",
-    });
+    setIsModalOpen(true);
   };
   return (
     <Layout>
@@ -219,6 +223,9 @@ export default function Slug() {
             <Button type="button" onClick={handlePayment}>
               Buy now
             </Button>
+            {isModalOpen && (
+              <Payment isOpen={isModalOpen} onClose={toggleModal} />
+            )}
           </TextContainer>
         </FlexContainer>
       </Container>
