@@ -26,7 +26,7 @@ const Container = styled.section`
   }
 
   @media (min-width: 1280px) {
-    margin: 140px 0px 50px;
+    margin: 140px 0px 80px;
     padding: 0 10rem;
   }
 `;
@@ -74,11 +74,11 @@ const TextContainer = styled.div`
   flex: 1;
 
   @media (min-width: 414px) {
-    padding: 20px;
+    padding: 30px;
   }
 
   @media (min-width: 360px) {
-    padding: 20px;
+    padding: 30px;
   }
 
   @media (min-width: 1280px) {
@@ -183,15 +183,15 @@ export default function Slug() {
 
   const handlePayment = () => {
     return toast({
-      message: "Comming soon...",
-      position: "top",
+      message: "Comming soon",
+      position: "bottom",
     });
   };
   return (
     <Layout>
       <Seo
         title={`${record.name} - Asset | DiceSea`}
-        description="DiceSea is a marketplace for everyone."
+        description="DiceSea is an online marketplace for everyone."
       />
       <Container>
         <FlexContainer>

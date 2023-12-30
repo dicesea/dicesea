@@ -47,8 +47,8 @@ export default function Home() {
   return (
     <Layout>
       <Seo
-        title="DiceSea, the marketplace for everyone"
-        description="DiceSea is a marketplace for everyone."
+        title="DiceSea, the online marketplace for everyone"
+        description="DiceSea is an online marketplace for everyone."
       />
       <Frame videoId="ELqDZKsmQhk" />
       <Card records={filteredArtRecords} title="Art Category" route="asset" />

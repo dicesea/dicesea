@@ -50,7 +50,7 @@ export default function Slug() {
     <Layout>
       <Seo
         title={`Explore ${capitalizedSlug} | DiceSea`}
-        description="DiceSea is a marketplace for everyone."
+        description="DiceSea is an online marketplace for everyone."
       />
       <Banner title={capitalizedSlug} backgroundImage="/images/banner.svg" />
       <Card
