@@ -48,8 +48,8 @@ export const Button = styled.button`
 
 const Network: FC<IProps> = ({ refetch }) => (
   <Container>
-    <h1>Refetching!</h1>
-    <Button onClick={() => refetch()}>Refetch!</Button>
+    <h1>Something went wrong</h1>
+    <Button onClick={() => refetch()}>Refetch</Button>
   </Container>
 );
 

@@ -6,11 +6,12 @@ import { capitalizeFirstLetter, categories, trimInputSpaces } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { initWeb5, setLoading } from "@/methods/features/marketplaceSlice";
-import { useAppDispatch } from "@/methods/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { Web5 } from "@web5/api";
 import { CREATE_RECORD } from "../querys/graphql";
 import { useMutation } from "@apollo/client";
 import { toast } from "@/components/toast";
+import Auth from "@/components/modals/auth";
 
 const SSection = styled.section`
   background-color: #fff;
@@ -174,11 +175,27 @@ export default function Create() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const { userDid, isLoading } = useAppSelector(
+    (state: any) => state.marketplace
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   useEffect(() => {
     (async () => {
       await dispatch(initWeb5());
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isLoading) {
+      toggleModal();
+    }
+  }, [isLoading]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState<string | null>(null);
@@ -375,6 +392,7 @@ export default function Create() {
           </Form>
         </Container>
       </SSection>
+      <Auth isOpen={isModalOpen} onClose={toggleModal} />
     </Layout>
   );
 }

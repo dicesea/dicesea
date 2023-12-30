@@ -12,7 +12,7 @@ import Network from "@/components/network";
 import Card from "@/components/card";
 import styled from "styled-components";
 import { toast } from "@/components/toast";
-import Modal from "@/components/modal";
+import Auth from "@/components/modals/auth";
 
 const Z1syfKXsr2 = styled.section`
   width: 100%;
@@ -165,7 +165,7 @@ export default function Profile() {
           <Card records={records} title="Your Records" route="asset" />
         </div>
       </Z1syfKXsr2>
-      {/* <Modal isOpen={isModalOpen} onClose={toggleModal} /> */}
+      <Auth isOpen={isModalOpen} onClose={toggleModal} />
     </Layout>
   );
 }
