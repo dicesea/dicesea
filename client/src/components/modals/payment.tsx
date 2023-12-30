@@ -120,7 +120,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               stroke-width="1.5"
               stroke="currentColor"
               onClick={() => onClose()}
-              style={{ height: "40px", width: "40px", cursor: "pointer" }}
+              style={{ height: "30px", width: "30px", cursor: "pointer" }}
             >
               <path
                 stroke-linecap="round"
