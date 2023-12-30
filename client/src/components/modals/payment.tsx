@@ -81,7 +81,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
     try {
       toast({
-        message: "Success",
+        message: "Successful",
         position: "bottom",
       });
       onClose();

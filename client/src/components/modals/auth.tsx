@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import styled from "styled-components";
 import { toast } from "../toast";
+import { handleSuccess } from "@/utils";
 
 interface ModalProps {
   isOpen: boolean;
@@ -90,11 +91,19 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       });
     }
 
-    toast({
-      message: "You're welcome",
-      position: "bottom",
-    });
-    onClose();
+    try {
+      toast({
+        message: "Successful",
+        position: "bottom",
+      });
+      onClose();
+    } catch (e) {
+      toast({
+        message: "Failed",
+        position: "bottom",
+      });
+      onClose();
+    }
   };
 
   const handleLogin = () => {
