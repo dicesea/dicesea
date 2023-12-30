@@ -277,7 +277,7 @@ export default function Create() {
     <Layout>
       <Seo
         title="Create | DiceSea"
-        description="DiceSea is a marketplace for everyone."
+        description="DiceSea is an online marketplace for everyone."
       />
       <SSection>
         <Container>

@@ -1,3 +1,4 @@
+import { handleRefresh } from "@/utils";
 import { FC } from "react";
 import styled from "styled-components";
 
@@ -20,9 +21,22 @@ const Title = styled.h1`
   padding: 10px;
 `;
 
+const Button = styled.button`
+  font-size: 12px;
+  font-weight: 400;
+  padding: 8px 10px;
+  border-radius: 50px;
+  background: #0069ff;
+  color: #fff;
+  border: 0;
+  text-align: center;
+`;
+
 const Error: FC<IProps> = ({ message }) => (
   <Container>
-    <Title>Error : {message}</Title>
+    {/* <Title>Error : {message}</Title> */}
+    <Title>Something went wrong</Title>
+    <Button onClick={handleRefresh}>Refresh</Button>
   </Container>
 );
 

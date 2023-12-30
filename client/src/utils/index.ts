@@ -196,3 +196,7 @@ export const replaceSpacesWithHyphens = (inputString: string) => {
 export function removeDidPrefix(text: string) {
   return toUpper(text.slice(8, 14));
 }
+
+export const handleRefresh = () => {
+  window.location.reload();
+};

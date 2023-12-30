@@ -12,6 +12,7 @@ import Network from "@/components/network";
 import Card from "@/components/card";
 import styled from "styled-components";
 import { toast } from "@/components/toast";
+import Modal from "@/components/modal";
 
 const Z1syfKXsr2 = styled.section`
   width: 100%;
@@ -56,6 +57,8 @@ const G2ERfT5gTR = styled.div`
 export default function Profile() {
   const dispatch = useAppDispatch();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     (async () => {
       await dispatch(initWeb5());
@@ -66,6 +69,17 @@ export default function Profile() {
   const { userDid, isLoading } = useAppSelector(
     (state: any) => state.marketplace
   );
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  useEffect(() => {
+    if (isLoading) {
+      // Call toggleModal when loading is true
+      toggleModal();
+    }
+  }, [isLoading]);
 
   // Use the useQuery hook to fetch data
   const { loading, error, data, refetch, networkStatus } = useQuery(
@@ -113,7 +127,7 @@ export default function Profile() {
     <Layout>
       <Seo
         title="Profile | DiceSea"
-        description="DiceSea is a marketplace for everyone."
+        description="DiceSea is an online marketplace for everyone."
       />
       <Z1syfKXsr2>
         <G2ERfT5gTR>
@@ -151,6 +165,7 @@ export default function Profile() {
           <Card records={records} title="Your Records" route="asset" />
         </div>
       </Z1syfKXsr2>
+      {/* <Modal isOpen={isModalOpen} onClose={toggleModal} /> */}
     </Layout>
   );
 }
