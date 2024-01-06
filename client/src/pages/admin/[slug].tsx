@@ -211,49 +211,9 @@ export default function Slug() {
   return (
     <Layout>
       <Seo
-        title={`${record.name} - Asset | DiceSea`}
+        title={`${slug} - Admin | DiceSea`}
         description="DiceSea is an online marketplace for everyone."
       />
-      <Container>
-        <FlexContainer>
-          <ImageContainer>
-            <Image
-              src={record?.imageUrl as string}
-              alt={record?.name as string}
-              height={500}
-              width={500}
-            />
-          </ImageContainer>
-          <TextContainer>
-            <Htssvatv style={{ marginTop: "20px" }}>
-              Owned by {shortDid(record?.owner)}
-            </Htssvatv>
-            <Htssvatv>Name is {record?.name}</Htssvatv>
-            <Htssvatv>Description is {record?.description}</Htssvatv>
-            <Htssvatv>
-              Category is {capitalizeFirstLetter(record?.category)}
-            </Htssvatv>
-            <Htssvatv>
-              Current price is $
-              {record?.price ? parseFloat(record.price).toFixed(2) : "N/A"}
-            </Htssvatv>
-            {user && user.did === record?.owner ? (
-              <Button type="button" disabled={true}>
-                On sale
-              </Button>
-            ) : (
-              <Button type="button" onClick={handlePayment}>
-                {isLoading ? "Processing" : "Buy now"}
-              </Button>
-            )}
-            {user ? (
-              <Payment isOpen={isModalOpen} onClose={toggleModal} />
-            ) : (
-              <Auth isOpen={isModalOpen} onClose={toggleModal} />
-            )}
-          </TextContainer>
-        </FlexContainer>
-      </Container>
     </Layout>
   );
 }

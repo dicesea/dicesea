@@ -151,6 +151,7 @@ import { ICard, IRecord } from "@/interfaces";
 import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
+import { capitalizeFirstLetter } from "@/utils";
 
 const Section = styled.section`
   margin: 50px auto;
@@ -288,8 +289,8 @@ const Title = styled.h1`
 
 const Paragragh = styled.p`
   color: #717171 !important;
-  font-weight: 500 !important;
-  font-size: 14px;
+  font-weight: 400 !important;
+  font-size: 12px;
   line-height: 20px;
   margin: 0px !important;
 `;
@@ -300,10 +301,13 @@ const Price = styled.span`
   font-weight: 500 !important;
 `;
 
-// const Rhsgstab = styled.svg`
-//   height: 20px;
-//   width: 20px;
-// `;
+const Rhsgstab = styled.div`
+  font-size: 10px !important;
+  color: white !important;
+  font-weight: 500 !important;
+  padding: 4px 8px;
+  border-radius: 50px;
+`;
 
 const Card: React.FC<ICard> = ({ records, title, route }) => {
   return (
@@ -326,19 +330,20 @@ const Card: React.FC<ICard> = ({ records, title, route }) => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Title>{record.name}</Title>
-                  {/* <Rhsgstab
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="#222222"
+                  <Rhsgstab
+                    style={{
+                      backgroundColor:
+                        record.status === "PENDING"
+                          ? "yellow"
+                          : record.status === "APPROVED"
+                          ? "green"
+                          : record.status === "REJECTED"
+                          ? "red"
+                          : "transparent",
+                    }}
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                    />
-                  </Rhsgstab> */}
+                    {capitalizeFirstLetter(record.status)}
+                  </Rhsgstab>
                 </div>
                 <Paragragh>{record.description}</Paragragh>
                 <Price>${record.price}</Price>
