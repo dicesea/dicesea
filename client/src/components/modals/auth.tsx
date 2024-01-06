@@ -181,6 +181,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         toast({ message: "Successful logged in", position: "bottom" });
         onClose();
         setLoading(false);
+        router.reload();
       } else {
         toast({ message: "Failed", position: "bottom" });
         setLoading(false);
@@ -287,7 +288,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <label>Email or DID</label>
+                  <label>Email</label>
                   <small>Required</small>
                 </div>
                 <input

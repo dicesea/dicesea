@@ -80,12 +80,11 @@ export default function Profile() {
     GET_OWNER_RECORDS,
     {
       variables: {
-        owner: user.did,
+        owner: user?.did || "",
       },
     }
   );
 
-  //
   useEffect(() => {
     if (networkStatus === NetworkStatus.refetch) {
       refetch();
@@ -128,8 +127,8 @@ export default function Profile() {
           <h5>
             {isLoading
               ? "Loading..."
-              : user.did
-              ? shortDid(user.did)
+              : user?.did || ""
+              ? shortDid(user?.did || "")
               : "No DID found"}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +137,7 @@ export default function Profile() {
               strokeWidth={1.5}
               stroke="currentColor"
               onClick={() => {
-                handleCopy(user.did);
+                handleCopy(user?.did || "");
               }}
               style={{
                 marginLeft: "5px",
@@ -156,7 +155,11 @@ export default function Profile() {
           </h5>
         </G2ERfT5gTR>
         <div>
-          <Card records={records} title="Your Records" route="asset" />
+          <Card
+            records={records}
+            title={`${records.length} Records`}
+            route="asset"
+          />
         </div>
       </Z1syfKXsr2>
       {user ? null : <Auth isOpen={isModalOpen} onClose={toggleModal} />}

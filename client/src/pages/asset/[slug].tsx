@@ -161,6 +161,7 @@ export default function Slug() {
 
   const { user } = useAppSelector((state: any) => state.marketplace);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { loading, error, data, refetch, networkStatus } = useQuery(
     GET_RECORD,
@@ -199,9 +200,11 @@ export default function Slug() {
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    setIsLoading(!isLoading);
   };
 
   const handlePayment = () => {
+    setIsLoading(!isLoading);
     toggleModal();
   };
   return (
@@ -233,9 +236,15 @@ export default function Slug() {
               Current price is $
               {record?.price ? parseFloat(record.price).toFixed(2) : "N/A"}
             </Htssvatv>
-            <Button type="button" onClick={handlePayment}>
-              Buy now
-            </Button>
+            {user.did === record?.owner ? (
+              <Button type="button" disabled={true}>
+                On sale
+              </Button>
+            ) : (
+              <Button type="button" onClick={handlePayment}>
+                {isLoading ? "Processing" : "Buy now"}
+              </Button>
+            )}
             {user ? (
               <Payment isOpen={isModalOpen} onClose={toggleModal} />
             ) : (
