@@ -40,5 +40,5 @@ next-env.d.ts
 # other
 docs
 
-# folder
-/server
+# server
+/server/
