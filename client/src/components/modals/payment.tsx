@@ -1,6 +1,7 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { toast } from "../toast";
+import { useRouter } from "next/router";
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ const ModalContent = styled.div`
   background-color: #fff;
   padding: 20px;
   margin: 20px;
-  border-radius: 0px;
+  border-radius: 20px;
   max-width: 400px;
   width: 100%;
   text-align: center;
@@ -72,13 +73,16 @@ const Button = styled.div`
 `;
 
 const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+  const router = useRouter();
+
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
-  const [cvc, setCvc] = useState("");
+  const [cvcNumber, setCvcNumber] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
-    if (!cardName || !cardNumber || !expiryDate || !cvc) {
+  const handlePay = () => {
+    if (!cardName || !cardNumber || !expiryDate || !cvcNumber) {
       return toast({
         message: "Please fill out all fields",
         position: "bottom",
@@ -86,17 +90,21 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
 
     try {
+      setLoading(true);
+
       toast({
-        message: "Successful",
+        message: "Successful paid",
         position: "bottom",
       });
       onClose();
+      setLoading(false);
+      router.reload();
     } catch (e) {
       toast({
         message: "Failed",
         position: "bottom",
       });
-      onClose();
+      setLoading(false);
     }
   };
 
@@ -199,13 +207,13 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               </div>
               <input
                 type="text"
-                value={cvc}
+                value={cvcNumber}
                 placeholder="CVC"
-                onChange={(e) => setCvc(e.target.value)}
+                onChange={(e) => setCvcNumber(e.target.value)}
               />
             </div>
           </div>
-          <button onClick={handleSubmit}>Send</button>
+          <button onClick={handlePay}>{loading ? "Sending..." : "Send"}</button>
         </div>
       </ModalContent>
     </Container>

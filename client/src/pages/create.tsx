@@ -5,9 +5,8 @@ import { FormEvent, useState, useRef, useEffect } from "react";
 import { capitalizeFirstLetter, categories, trimInputSpaces } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { initWeb5, setLoading } from "@/methods/features/marketplaceSlice";
+import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
-import { Web5 } from "@web5/api";
 import { CREATE_RECORD } from "../querys/graphql";
 import { useMutation } from "@apollo/client";
 import { toast } from "@/components/toast";
@@ -175,27 +174,8 @@ export default function Create() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { userDid, isLoading } = useAppSelector(
-    (state: any) => state.marketplace
-  );
-
+  const { user } = useAppSelector((state: any) => state.marketplace);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  useEffect(() => {
-    (async () => {
-      await dispatch(initWeb5());
-    })();
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (isLoading) {
-      toggleModal();
-    }
-  }, [isLoading]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState<string | null>(null);
@@ -204,6 +184,23 @@ export default function Create() {
   const [collection, setCollection] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
   const [price, setPrice] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      await dispatch(getLocalStorage());
+
+      if (!user) {
+        toggleModal();
+      }
+    };
+
+    initializeApp();
+  }, [dispatch, user]);
 
   const onChange = () => {
     if (fileInputRef.current) {
@@ -223,12 +220,10 @@ export default function Create() {
   };
 
   // Use the useMutation hook to create data
-  const [createRecord, { loading }] = useMutation(CREATE_RECORD);
+  const [createRecord, {}] = useMutation(CREATE_RECORD);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const { did } = await Web5.connect({ sync: "5s" });
 
     const trimmedName = trimInputSpaces(name || "");
     const trimmedDescription = trimInputSpaces(description || "");
@@ -250,20 +245,22 @@ export default function Create() {
     }
 
     try {
+      setLoading(true);
+
       const record = {
         name: trimmedName,
         description: trimmedDescription,
         price: trimmedPrice,
         imageUrl: trimmedImage,
         category: trimmedCategory,
-        creator: did,
-        owner: did,
+        creator: user.did,
+        owner: user.did,
         user: {
-          _id: did,
-          name: did,
-          description: did,
-          profileImage: trimmedImage,
-          bannerImage: trimmedImage,
+          _id: user._id,
+          name: user.did,
+          description: user.description,
+          profileImage: user.profileImage,
+          bannerImage: user.bannerImage,
         },
       };
 
@@ -274,19 +271,20 @@ export default function Create() {
       // Check if the operation was successful
       if (data && data.createRecord) {
         toast({ message: "Created", position: "top" });
-        dispatch(setLoading(false));
+        setLoading(false);
 
         // Perform any additional actions after successful creation
         router.push("/profile");
+        setLoading(false);
       } else {
         // Handle the case where the operation failed
         toast({ message: "Failed", position: "top" });
-        dispatch(setLoading(false));
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       toast({ message: "Failed", position: "top" });
-      dispatch(setLoading(false));
+      setLoading(false);
     }
   };
 
@@ -360,15 +358,6 @@ export default function Create() {
                 }
               />
             </Wrapper>
-            {/* <Wrapper>
-              <Label htmlFor="collection">Collection</Label>
-              <Input
-                placeholder="Record collection"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setCollection(e.target.value)
-                }
-              />
-            </Wrapper> */}
             <Wrapper>
               <Label htmlFor="category">Category</Label>
               <Select
@@ -385,14 +374,13 @@ export default function Create() {
                 ))}
               </Select>
             </Wrapper>
-
             <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create"}
             </Button>
           </Form>
         </Container>
       </SSection>
-      <Auth isOpen={isModalOpen} onClose={toggleModal} />
+      {user ? null : <Auth isOpen={isModalOpen} onClose={toggleModal} />}
     </Layout>
   );
 }

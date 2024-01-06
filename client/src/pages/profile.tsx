@@ -2,7 +2,7 @@ import { Seo } from "@/components/seo";
 import Layout from "@/components/layout";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
-import { initWeb5 } from "@/methods/features/marketplaceSlice";
+import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 import { shortDid } from "@/utils";
 import { GET_OWNER_RECORDS } from "@/querys/graphql";
 import { NetworkStatus, useQuery } from "@apollo/client";
@@ -56,42 +56,35 @@ const G2ERfT5gTR = styled.div`
 
 export default function Profile() {
   const dispatch = useAppDispatch();
-
+  const { user, isLoading } = useAppSelector((state: any) => state.marketplace);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      await dispatch(initWeb5());
-    })();
-  }, [dispatch]);
-
-  // Use the useAppSelector hook to fetch data
-  const { userDid, isLoading } = useAppSelector(
-    (state: any) => state.marketplace
-  );
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
   useEffect(() => {
-    if (isLoading) {
-      // Call toggleModal when loading is true
-      toggleModal();
-    }
-  }, [isLoading]);
+    const initializeApp = async () => {
+      await dispatch(getLocalStorage());
+
+      if (!user) {
+        toggleModal();
+      }
+    };
+
+    initializeApp();
+  }, [dispatch, isLoading, user]);
 
   // Use the useQuery hook to fetch data
   const { loading, error, data, refetch, networkStatus } = useQuery(
     GET_OWNER_RECORDS,
     {
       variables: {
-        owner: userDid,
+        owner: user?.did || "",
       },
     }
   );
 
-  //
   useEffect(() => {
     if (networkStatus === NetworkStatus.refetch) {
       refetch();
@@ -134,8 +127,8 @@ export default function Profile() {
           <h5>
             {isLoading
               ? "Loading..."
-              : userDid
-              ? shortDid(userDid)
+              : user?.did || ""
+              ? shortDid(user?.did || "")
               : "No DID found"}
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +137,7 @@ export default function Profile() {
               strokeWidth={1.5}
               stroke="currentColor"
               onClick={() => {
-                handleCopy(userDid);
+                handleCopy(user?.did || "");
               }}
               style={{
                 marginLeft: "5px",
@@ -162,10 +155,14 @@ export default function Profile() {
           </h5>
         </G2ERfT5gTR>
         <div>
-          <Card records={records} title="Your Records" route="asset" />
+          <Card
+            records={records}
+            title={`${records.length} Records`}
+            route="asset"
+          />
         </div>
       </Z1syfKXsr2>
-      <Auth isOpen={isModalOpen} onClose={toggleModal} />
+      {user ? null : <Auth isOpen={isModalOpen} onClose={toggleModal} />}
     </Layout>
   );
 }
