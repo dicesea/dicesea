@@ -159,7 +159,7 @@ export default function Profile() {
           <Card records={records} title="Your Records" route="asset" />
         </div>
       </Z1syfKXsr2>
-      {user ? null : <Auth isopen={isModalOpen} onClose={toggleModal} />}
+      {user ? null : <Auth isOpen={isModalOpen} onClose={toggleModal} />}
     </Layout>
   );
 }

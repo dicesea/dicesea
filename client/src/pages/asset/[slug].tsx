@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { Seo } from "@/components/seo";
 import Layout from "@/components/layout";
-import { toast } from "@/components/toast";
 import { useEffect, useState } from "react";
 import { NetworkStatus, useQuery } from "@apollo/client";
 import Network from "@/components/network";
@@ -12,6 +11,9 @@ import Error from "@/components/error";
 import { GET_RECORD } from "@/querys/graphql";
 import { capitalizeFirstLetter, shortDid } from "@/utils";
 import Payment from "@/components/modals/payment";
+import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
+import { getLocalStorage } from "@/methods/features/marketplaceSlice";
+import Auth from "@/components/modals/auth";
 
 const Container = styled.section`
   margin: 140px 0px 50px;
@@ -153,8 +155,11 @@ const Button = styled.button`
 
 export default function Slug() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const { slug } = router.query;
 
+  const { user } = useAppSelector((state: any) => state.marketplace);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { loading, error, data, refetch, networkStatus } = useQuery(
@@ -163,6 +168,14 @@ export default function Slug() {
       variables: { _id: slug as string },
     }
   );
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      await dispatch(getLocalStorage());
+    };
+
+    initializeApp();
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (networkStatus === NetworkStatus.refetch) {
@@ -189,7 +202,7 @@ export default function Slug() {
   };
 
   const handlePayment = () => {
-    setIsModalOpen(true);
+    toggleModal();
   };
   return (
     <Layout>
@@ -223,8 +236,10 @@ export default function Slug() {
             <Button type="button" onClick={handlePayment}>
               Buy now
             </Button>
-            {isModalOpen && (
+            {user ? (
               <Payment isOpen={isModalOpen} onClose={toggleModal} />
+            ) : (
+              <Auth isOpen={isModalOpen} onClose={toggleModal} />
             )}
           </TextContainer>
         </FlexContainer>

@@ -1,29 +1,26 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { toast } from "../toast";
-import { handleSuccess } from "@/utils";
 import { LOGIN_USER, REGISTER_USER } from "@/querys/graphql";
 import { useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
-import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
-import { setLoading } from "@/methods/features/marketplaceSlice";
 import { Web5 } from "@web5/api";
+import { useRouter } from "next/router";
 
 interface ModalProps {
-  isopen: boolean;
+  isOpen: boolean;
   onClose: () => void;
 }
 
-const Container = styled.div<{ isopen: boolean }>`
+const Container = styled.div<{ isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: rgba(45, 47, 49, 0.8);
-  opacity: ${(props) => (props.isopen ? 1 : 0)};
+  opacity: ${(props) => (props.isOpen ? 1 : 0)};
   transition: opacity 0.2s;
-  pointer-events: ${(props) => (props.isopen ? "auto" : "none")};
+  pointer-events: ${(props) => (props.isOpen ? "auto" : "none")};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +82,7 @@ enum ModalState {
   Reset = "Reset",
 }
 
-const Auth: React.FC<ModalProps> = ({ isopen, onClose }) => {
+const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
 
   const [modalState, setModalState] = useState<ModalState>(ModalState.Register);
@@ -100,7 +97,6 @@ const Auth: React.FC<ModalProps> = ({ isopen, onClose }) => {
   };
 
   const [registerUser, {}] = useMutation(REGISTER_USER);
-
   const [loginUser, {}] = useMutation(LOGIN_USER);
 
   const handleRegister = async () => {
@@ -142,6 +138,7 @@ const Auth: React.FC<ModalProps> = ({ isopen, onClose }) => {
         toast({ message: "Successful created", position: "bottom" });
         onClose();
         setLoading(false);
+        router.reload();
       } else {
         toast({ message: "Failed", position: "bottom" });
         setLoading(false);
@@ -198,7 +195,7 @@ const Auth: React.FC<ModalProps> = ({ isopen, onClose }) => {
   };
 
   return (
-    <Container isopen={isopen}>
+    <Container isOpen={isOpen}>
       <ModalContent>
         <div>
           {modalState === ModalState.Register ? (

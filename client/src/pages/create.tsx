@@ -5,10 +5,7 @@ import { FormEvent, useState, useRef, useEffect } from "react";
 import { capitalizeFirstLetter, categories, trimInputSpaces } from "@/utils";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {
-  getLocalStorage,
-  setLoading,
-} from "@/methods/features/marketplaceSlice";
+import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { CREATE_RECORD } from "../querys/graphql";
 import { useMutation } from "@apollo/client";
@@ -361,15 +358,6 @@ export default function Create() {
                 }
               />
             </Wrapper>
-            {/* <Wrapper>
-              <Label htmlFor="collection">Collection</Label>
-              <Input
-                placeholder="Record collection"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setCollection(e.target.value)
-                }
-              />
-            </Wrapper> */}
             <Wrapper>
               <Label htmlFor="category">Category</Label>
               <Select
@@ -386,14 +374,13 @@ export default function Create() {
                 ))}
               </Select>
             </Wrapper>
-
             <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create"}
             </Button>
           </Form>
         </Container>
       </SSection>
-      {user ? null : <Auth isopen={isModalOpen} onClose={toggleModal} />}
+      {user ? null : <Auth isOpen={isModalOpen} onClose={toggleModal} />}
     </Layout>
   );
 }
