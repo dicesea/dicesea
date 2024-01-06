@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { toast } from "../toast";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
-import { PAYMENT_DETAIL } from "@/querys/graphql";
+import { SEND_PAYMENT } from "@/querys/graphql";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 
@@ -106,7 +106,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   }, [dispatch, user]);
 
   // Use the useMutation hook to create data
-  const [paymentDetail, {}] = useMutation(PAYMENT_DETAIL);
+  const [sendPayment, {}] = useMutation(SEND_PAYMENT);
 
   const handlePay = async () => {
     if (!cardName || !cardNumber || !expiryDate || !cvcNumber) {
@@ -126,19 +126,19 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         cvcNumber,
         user: {
           _id: user._id,
+          did: user.did,
           name: user.did,
-          description: user.description,
-          profileImage: user.profileImage,
-          bannerImage: user.bannerImage,
+          email: user.email,
+          role: user.role,
         },
       };
 
-      const { data } = await paymentDetail({
+      const { data } = await sendPayment({
         variables: { detail: detail },
       });
 
       // Check if the operation was successful
-      if (data && data.paymentDetail) {
+      if (data && data.sendPayment) {
         toast({ message: "Successful paid", position: "bottom" });
         setLoading(false);
 

@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+// RECORD
 export const CREATE_RECORD = gql`
   mutation CreateRecord($record: NewRecordInput!) {
     createRecord(record: $record) {
@@ -27,6 +28,30 @@ export const CREATE_RECORD = gql`
 export const GET_APPROVED_RECORDS = gql`
   query GetApprovedRecords {
     getApprovedRecords {
+      _id
+      name
+      description
+      imageUrl
+      price
+      category
+      status
+      owner
+      creator
+      user {
+        _id
+        name
+        description
+        profileImage
+        bannerImage
+        role
+      }
+    }
+  }
+`;
+
+export const GET_PENDING_RECORDS = gql`
+  query GetPendingRecords {
+    getPendingRecords {
       _id
       name
       description
@@ -96,6 +121,13 @@ export const GET_OWNER_RECORDS = gql`
   }
 `;
 
+export const APPROVE_RECORD = gql`
+  mutation ApproveRecord($_id: ID!) {
+    approveRecord(_id: $_id)
+  }
+`;
+
+// USER
 export const REGISTER_USER = gql`
   mutation RegisterUser($user: NewUserInput!) {
     registerUser(user: $user) {
@@ -130,9 +162,10 @@ export const LOGIN_USER = gql`
   }
 `;
 
-export const PAYMENT_DETAIL = gql`
-  mutation PaymentDetail($detail: UserDetail!) {
-    paymentDetail(detail: $detail) {
+// PAYMENT
+export const SEND_PAYMENT = gql`
+  mutation SendPayment($detail: PaymentDetail!) {
+    sendPayment(detail: $detail) {
       detail {
         _id
         cardName
@@ -141,10 +174,9 @@ export const PAYMENT_DETAIL = gql`
         cvcNumber
         user {
           _id
+          did
           name
-          description
-          profileImage
-          bannerImage
+          email
           role
         }
       }
