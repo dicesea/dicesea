@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { toast } from "../toast";
 import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
+import { PAYMENT_DETAIL } from "@/querys/graphql";
+import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
+import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 
 interface ModalProps {
   isOpen: boolean;
@@ -74,6 +78,7 @@ const Button = styled.div`
 
 const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -81,7 +86,29 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [cvcNumber, setCvcNumber] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handlePay = () => {
+  const { user } = useAppSelector((state: any) => state.marketplace);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      await dispatch(getLocalStorage());
+
+      if (!user) {
+        toggleModal();
+      }
+    };
+
+    initializeApp();
+  }, [dispatch, user]);
+
+  // Use the useMutation hook to create data
+  const [paymentDetail, {}] = useMutation(PAYMENT_DETAIL);
+
+  const handlePay = async () => {
     if (!cardName || !cardNumber || !expiryDate || !cvcNumber) {
       return toast({
         message: "Please fill out all fields",
@@ -92,13 +119,39 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     try {
       setLoading(true);
 
-      toast({
-        message: "Successful paid",
-        position: "bottom",
+      const detail = {
+        cardName,
+        cardNumber,
+        expiryDate,
+        cvcNumber,
+        user: {
+          _id: user._id,
+          name: user.did,
+          description: user.description,
+          profileImage: user.profileImage,
+          bannerImage: user.bannerImage,
+        },
+      };
+
+      const { data } = await paymentDetail({
+        variables: { detail: detail },
       });
-      onClose();
-      setLoading(false);
-      router.reload();
+
+      // Check if the operation was successful
+      if (data && data.paymentDetail) {
+        toast({ message: "Successful paid", position: "bottom" });
+        setLoading(false);
+
+        // Perform any additional actions after successful creation
+        router.push("/profile");
+        setLoading(false);
+        onClose();
+        router.reload();
+      } else {
+        // Handle the case where the operation failed
+        toast({ message: "Failed", position: "bottom" });
+        setLoading(false);
+      }
     } catch (e) {
       toast({
         message: "Failed",

@@ -240,7 +240,7 @@ export default function Create() {
     ) {
       return toast({
         message: "Please fill out all fields",
-        position: "top",
+        position: "bottom",
       });
     }
 
@@ -270,20 +270,20 @@ export default function Create() {
 
       // Check if the operation was successful
       if (data && data.createRecord) {
-        toast({ message: "Created", position: "top" });
-        setLoading(false);
+        toast({ message: "Created", position: "bottom" });
 
-        // Perform any additional actions after successful creation
+        setLoading(false);
         router.push("/profile");
         setLoading(false);
+        router.reload();
       } else {
         // Handle the case where the operation failed
-        toast({ message: "Failed", position: "top" });
+        toast({ message: "Failed", position: "bottom" });
         setLoading(false);
       }
     } catch (error) {
       console.error(error);
-      toast({ message: "Failed", position: "top" });
+      toast({ message: "Failed", position: "bottom" });
       setLoading(false);
     }
   };

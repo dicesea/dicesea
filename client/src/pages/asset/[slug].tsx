@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { Seo } from "@/components/seo";
 import Layout from "@/components/layout";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { NetworkStatus, useQuery } from "@apollo/client";
 import Network from "@/components/network";
 import { Progress } from "@/components/progress";
@@ -203,7 +203,8 @@ export default function Slug() {
     setIsLoading(!isLoading);
   };
 
-  const handlePayment = () => {
+  const handlePayment = async (event: FormEvent) => {
+    event.preventDefault();
     setIsLoading(!isLoading);
     toggleModal();
   };

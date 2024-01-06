@@ -110,7 +110,7 @@ export default function Profile() {
     try {
       toast({
         message: "Copied",
-        position: "top",
+        position: "bottom",
       });
     } catch (error) {
       console.log(error);
