@@ -129,3 +129,25 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const PAYMENT_DETAIL = gql`
+  mutation PaymentDetail($detail: UserDetail!) {
+    paymentDetail(detail: $detail) {
+      detail {
+        _id
+        cardName
+        cardNumber
+        expiryDate
+        cvcNumber
+        user {
+          _id
+          name
+          description
+          profileImage
+          bannerImage
+          role
+        }
+      }
+    }
+  }
+`;

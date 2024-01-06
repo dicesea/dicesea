@@ -12,6 +12,7 @@
     "@apollo/client": "^3.8.8",
     "@apollo/server": "^4.9.5",
     "@reduxjs/toolkit": "^1.9.7",
+    "@stripe/stripe-js": "^2.2.2",
     "@types/styled-components": "^5.1.29",
     "@web5/api": "^0.8.3",
     "awesome-toast-component": "^2.0.6",
