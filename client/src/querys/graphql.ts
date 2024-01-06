@@ -95,3 +95,37 @@ export const GET_OWNER_RECORDS = gql`
     }
   }
 `;
+
+export const REGISTER_USER = gql`
+  mutation RegisterUser($user: NewUserInput!) {
+    registerUser(user: $user) {
+      user {
+        _id
+        did
+        name
+        description
+        profileImage
+        bannerImage
+        role
+      }
+      token
+    }
+  }
+`;
+
+export const LOGIN_USER = gql`
+  mutation LoginUser($user: ExistUserInput!) {
+    loginUser(user: $user) {
+      user {
+        _id
+        did
+        name
+        description
+        profileImage
+        bannerImage
+        role
+      }
+      token
+    }
+  }
+`;

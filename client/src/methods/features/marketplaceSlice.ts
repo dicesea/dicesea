@@ -11,37 +11,26 @@ import { useMutation } from "@apollo/client";
 
 export interface MarketplaceState {
   web5Instance: Web5 | null;
-  userDid: string | undefined;
   records: any[];
   loading: boolean;
   isLoading: boolean;
   error: string | null | undefined;
+  user: undefined;
 }
 
 const initialState: MarketplaceState = {
   web5Instance: null,
-  userDid: undefined,
   records: [],
   loading: false,
   error: null,
   isLoading: false,
+  user: undefined,
 };
 
 export const marketplaceSlice = createSlice({
   name: "marketplace",
   initialState,
   reducers: {
-    // setWeb5Instance: (state, action: PayloadAction<Web5 | null>) => {
-    //   state.web5Instance = action.payload;
-    // },
-    setUserDid: (state, action: PayloadAction<string | undefined>) => {
-      state.userDid = action.payload;
-
-      if (action.payload) {
-        localStorage.setItem("userDid", action.payload);
-        setUserDid(action.payload);
-      }
-    },
     setRecords: (state, action: PayloadAction<any>) => {
       state.records = action.payload;
     },
@@ -51,27 +40,30 @@ export const marketplaceSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    setLocalStorage: (state, action: PayloadAction<undefined>) => {
+      state.user = action.payload;
+    },
   },
 });
 
-export const initWeb5 = (): AppThunk => async (dispatch) => {
-  try {
-    dispatch(setLoading(true));
+// export const initWeb5 = (): AppThunk => async (dispatch) => {
+//   try {
+//     dispatch(setLoading(true));
 
-    const { web5, did } = await Web5.connect({ sync: "5s" });
+//     const { web5, did } = await Web5.connect({ sync: "5s" });
 
-    if (web5 && did) {
-      // dispatch(setWeb5Instance(web5));
-      dispatch(setUserDid(did));
-      dispatch(setLoading(false));
+//     if (web5 && did) {
+//       // dispatch(setWeb5Instance(web5));
+//       dispatch(setUserDid(did));
+//       dispatch(setLoading(false));
 
-      console.log("Web5 initialized");
-    }
-  } catch (error) {
-    console.log(error);
-    dispatch(setLoading(false));
-  }
-};
+//       console.log("Web5 initialized");
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     dispatch(setLoading(false));
+//   }
+// };
 
 export const getRecords = (): AppThunk => async (dispatch) => {
   try {
@@ -184,13 +176,28 @@ export const createRecord =
     }
   };
 
-export const {
-  // setWeb5Instance,
-  setUserDid,
-  setRecords,
-  setLoading,
-  setError,
-} = marketplaceSlice.actions;
+export const getLocalStorage = (): AppThunk => async (dispatch) => {
+  try {
+    dispatch(setLoading(true));
+
+    // Retrieve the user JSON string from local storage
+    const user = localStorage.getItem("user");
+
+    // If a user JSON string is found, parse it into an object
+    if (user) {
+      const userObject = JSON.parse(user);
+      dispatch(setLocalStorage(userObject));
+    }
+
+    dispatch(setLoading(false));
+  } catch (error) {
+    console.error("Error setting user from local storage:", error);
+    dispatch(setLoading(false));
+  }
+};
+
+export const { setRecords, setLoading, setError, setLocalStorage } =
+  marketplaceSlice.actions;
 
 export const selectMarketplaceState = (state: RootState) => state.marketplace;
 

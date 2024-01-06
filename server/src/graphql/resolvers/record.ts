@@ -2,7 +2,7 @@ import { IResolvers } from "@graphql-tools/utils";
 import { v2 as cloudinary } from "cloudinary";
 import { Db, ObjectId } from "mongodb";
 import { RECORDS_COLLECTION } from "../../mongo";
-import { IRecord, IUser } from "../../interfaces";
+import { IRecord } from "../../interfaces";
 import { extractPublicIdFromUrl } from "../../utils";
 
 // Configure Cloudinary

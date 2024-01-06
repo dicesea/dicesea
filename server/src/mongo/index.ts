@@ -3,6 +3,7 @@ import config from "../config";
 
 export * from "./collections";
 export * from "./records";
+export * from "./users";
 
 export default class MongoLib {
   private client: MongoClient;
