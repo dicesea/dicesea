@@ -217,3 +217,15 @@ export const handleError = (message: string, onClose: any) => {
   });
   onClose();
 };
+
+export const handleCopy = (text: string) => {
+  navigator.clipboard.writeText(text);
+  try {
+    toast({
+      message: "Copied",
+      position: "bottom",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

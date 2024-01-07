@@ -181,7 +181,6 @@ export default function Create() {
   const [name, setName] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const [image, setImage] = useState<string | null>(null);
-  const [collection, setCollection] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
   const [price, setPrice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -200,7 +199,7 @@ export default function Create() {
     };
 
     initializeApp();
-  }, [dispatch, user]);
+  }, []);
 
   const onChange = () => {
     if (fileInputRef.current) {
@@ -257,10 +256,13 @@ export default function Create() {
         owner: user.did,
         user: {
           _id: user._id,
-          name: user.did,
+          did: user.did,
+          name: user.name,
+          email: user.email,
           description: user.description,
           profileImage: user.profileImage,
           bannerImage: user.bannerImage,
+          role: user.role,
         },
       };
 
@@ -270,12 +272,12 @@ export default function Create() {
 
       // Check if the operation was successful
       if (data && data.createRecord) {
-        toast({ message: "Created", position: "bottom" });
-
-        setLoading(false);
+        toast({ message: "Created sucessfully", position: "bottom" });
         router.push("/profile");
         setLoading(false);
-        router.reload();
+        setTimeout(() => {
+          router.reload();
+        }, 500);
       } else {
         // Handle the case where the operation failed
         toast({ message: "Failed", position: "bottom" });

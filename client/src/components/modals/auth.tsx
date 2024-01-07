@@ -73,7 +73,16 @@ const ModalContent = styled.div`
 
 const Button = styled.div`
   cursor: pointer;
-  border-bottom: 2px #eee solid;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 5px 10px;
+  background-color: #eee;
+  border: 1px solid #eee;
+`;
+
+const Shsgsysyau = styled.h2`
+  margin: 0px !important;
 `;
 
 enum ModalState {
@@ -130,7 +139,6 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       });
 
       if (data && data.registerUser.user) {
-        // Convert the object to a JSON string
         const user = JSON.stringify(data.registerUser.user);
 
         localStorage.setItem("user", user);
@@ -209,7 +217,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   marginBottom: "20px",
                 }}
               >
-                <h2>{modalState}</h2>
+                <Shsgsysyau>{modalState}</Shsgsysyau>
                 <Button onClick={() => handleToggleState(ModalState.Login)}>
                   Login
                 </Button>
@@ -227,6 +235,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 value={name}
+                required
                 onChange={(e) => setName(e.target.value)}
               />
               <div
@@ -242,6 +251,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="email"
                 value={email}
+                required
                 onChange={(e) => setEmail(e.target.value)}
               />
               <div
@@ -274,7 +284,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     marginBottom: "20px",
                   }}
                 >
-                  <h2>{modalState}</h2>
+                  <Shsgsysyau>{modalState}</Shsgsysyau>
                   <Button
                     onClick={() => handleToggleState(ModalState.Register)}
                   >
@@ -288,12 +298,13 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <label>Email</label>
+                  <label>Email or DID</label>
                   <small>Required</small>
                 </div>
                 <input
                   type="email"
                   value={email}
+                  required
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <div
@@ -309,6 +320,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 <input
                   type="password"
                   value={password}
+                  required
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button disabled={loading} onClick={handleLogin}>

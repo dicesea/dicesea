@@ -15,7 +15,9 @@ export const CREATE_RECORD = gql`
       creator
       user {
         _id
+        did
         name
+        email
         description
         profileImage
         bannerImage
@@ -135,6 +137,7 @@ export const REGISTER_USER = gql`
         _id
         did
         name
+        email
         description
         profileImage
         bannerImage
@@ -152,6 +155,7 @@ export const LOGIN_USER = gql`
         _id
         did
         name
+        email
         description
         profileImage
         bannerImage

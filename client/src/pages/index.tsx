@@ -9,26 +9,8 @@ import Error from "@/components/error";
 import { GET_APPROVED_RECORDS } from "@/querys/graphql";
 import { IRecord } from "@/interfaces";
 import Card from "@/components/card";
-import { getLocalStorage } from "@/methods/features/marketplaceSlice";
-import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 
 export default function Home() {
-  const dispatch = useAppDispatch();
-  const { user, isLoading } = useAppSelector((state: any) => state.marketplace);
-
-  useEffect(() => {
-    const initializeApp = async () => {
-      await dispatch(getLocalStorage());
-
-      // if (!user.did) {
-      //   toggleModal();
-      // }
-    };
-
-    initializeApp();
-  }, [dispatch, isLoading, user]);
-
-  // Use the useQuery hook to fetch data
   const { loading, error, data, refetch, networkStatus } =
     useQuery(GET_APPROVED_RECORDS);
 

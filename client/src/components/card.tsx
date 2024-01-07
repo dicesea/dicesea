@@ -152,6 +152,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import { capitalizeFirstLetter } from "@/utils";
+import { useRouter } from "next/router";
 
 const Section = styled.section`
   margin: 50px auto;
@@ -310,6 +311,7 @@ const Rhsgstab = styled.div`
 `;
 
 const Card: React.FC<ICard> = ({ records, title, route }) => {
+  const router = useRouter();
   return (
     <Section>
       <Heading>{title}</Heading>
@@ -321,7 +323,7 @@ const Card: React.FC<ICard> = ({ records, title, route }) => {
                 <CardImage
                   src={record.imageUrl}
                   alt={record.name as string}
-                  height={250}
+                  height={500}
                   width={500}
                 />
               </CardImageWrapper>
@@ -330,20 +332,22 @@ const Card: React.FC<ICard> = ({ records, title, route }) => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Title>{record.name}</Title>
-                  <Rhsgstab
-                    style={{
-                      backgroundColor:
-                        record.status === "PENDING"
-                          ? "yellow"
-                          : record.status === "APPROVED"
-                          ? "green"
-                          : record.status === "REJECTED"
-                          ? "red"
-                          : "transparent",
-                    }}
-                  >
-                    {capitalizeFirstLetter(record.status)}
-                  </Rhsgstab>
+                  {router.asPath === "/profile" ? (
+                    <Rhsgstab
+                      style={{
+                        backgroundColor:
+                          record.status === "PENDING"
+                            ? "yellow"
+                            : record.status === "APPROVED"
+                            ? "green"
+                            : record.status === "REJECTED"
+                            ? "red"
+                            : "transparent",
+                      }}
+                    >
+                      {capitalizeFirstLetter(record.status)}
+                    </Rhsgstab>
+                  ) : null}
                 </div>
                 <Paragragh>{record.description}</Paragragh>
                 <Price>${record.price}</Price>
