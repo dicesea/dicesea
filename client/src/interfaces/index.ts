@@ -30,15 +30,11 @@ export interface Item {
 
 export interface IUser {
   _id: string;
+  did: string;
   name: string;
-  description: string;
-  owner: string;
-  creator: string;
   profileImage: string;
   bannerImage: string;
   role: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface IRecord {

@@ -55,8 +55,7 @@ const ImageContainer = styled.div`
 
   img {
     width: 100%;
-    height: 400px;
-    border-radius: 20px;
+    height: 100%;
     object-fit: cover;
 
     @media (min-width: 414px) {
@@ -122,7 +121,7 @@ const TextContainer = styled.div`
 
 const Htssvatv = styled.div`
   color: #222222;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 16px;
   margin-bottom: 20px;
 `;
@@ -176,7 +175,7 @@ export default function Slug() {
     };
 
     initializeApp();
-  }, [dispatch, user]);
+  }, []);
 
   useEffect(() => {
     if (networkStatus === NetworkStatus.refetch) {
@@ -222,20 +221,63 @@ export default function Slug() {
               alt={record?.name as string}
               height={500}
               width={500}
+              priority
             />
           </ImageContainer>
           <TextContainer>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "20px",
+              }}
+            >
+              <Htssvatv
+                style={{
+                  border: "1px solid #eee",
+                  width: "50px",
+                  textAlign: "center",
+                  backgroundColor: "#eee",
+                  borderRadius: "50px",
+                  padding: "10px",
+                  marginBottom: "0px",
+                }}
+              >
+                {capitalizeFirstLetter(record?.category)}
+              </Htssvatv>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                width={20}
+                height={20}
+                style={{
+                  backgroundColor: "#eee",
+                  borderRadius: "50px",
+                  padding: "10px",
+                  cursor: "pointer",
+                }}
+                onClick={() => router.back()}
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </div>
+            <Htssvatv style={{ fontSize: "25px", fontWeight: "600" }}>
+              {record?.name}
+            </Htssvatv>
             <Htssvatv style={{ marginTop: "20px" }}>
               Owned by {shortDid(record?.owner)}
             </Htssvatv>
-            <Htssvatv>Name is {record?.name}</Htssvatv>
-            <Htssvatv>Description is {record?.description}</Htssvatv>
+            <Htssvatv>{record?.description}</Htssvatv>
             <Htssvatv>
-              Category is {capitalizeFirstLetter(record?.category)}
-            </Htssvatv>
-            <Htssvatv>
-              Current price is $
-              {record?.price ? parseFloat(record.price).toFixed(2) : "N/A"}
+              US ${record?.price ? parseFloat(record.price).toFixed(2) : "N/A"}
             </Htssvatv>
             {user && user.did === record?.owner ? (
               <Button type="button" disabled={true}>

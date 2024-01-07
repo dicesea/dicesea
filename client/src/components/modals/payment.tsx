@@ -103,9 +103,8 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     };
 
     initializeApp();
-  }, [dispatch, user]);
+  }, []);
 
-  // Use the useMutation hook to create data
   const [sendPayment, {}] = useMutation(SEND_PAYMENT);
 
   const handlePay = async () => {
@@ -178,14 +177,14 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               onClick={() => onClose()}
               style={{ height: "30px", width: "30px", cursor: "pointer" }}
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
@@ -203,6 +202,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           <input
             type="text"
             value={cardName}
+            required
             placeholder="Name on card"
             onChange={(e) => setCardName(e.target.value)}
           />
@@ -219,6 +219,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           <input
             type="text"
             value={cardNumber}
+            required
             placeholder="Card number"
             onChange={(e) => setCardNumber(e.target.value)}
           />
@@ -243,6 +244,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 value={expiryDate}
+                required
                 placeholder="MM/YY"
                 onChange={(e) => setExpiryDate(e.target.value)}
               />
@@ -261,6 +263,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 value={cvcNumber}
+                required
                 placeholder="CVC"
                 onChange={(e) => setCvcNumber(e.target.value)}
               />

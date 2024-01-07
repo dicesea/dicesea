@@ -8,12 +8,14 @@ import { NetworkStatus, useQuery } from "@apollo/client";
 import Network from "@/components/network";
 import { Progress } from "@/components/progress";
 import Error from "@/components/error";
-import { GET_RECORD } from "@/querys/graphql";
+import { GET_PENDING_RECORDS, GET_RECORD } from "@/querys/graphql";
 import { capitalizeFirstLetter, shortDid } from "@/utils";
 import Payment from "@/components/modals/payment";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 import Auth from "@/components/modals/auth";
+import Card from "@/components/card";
+import Banner from "@/components/banner";
 
 const Container = styled.section`
   margin: 140px 0px 50px;
@@ -153,7 +155,7 @@ const Button = styled.button`
   }
 `;
 
-export default function Slug() {
+export default function Admin() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -163,17 +165,21 @@ export default function Slug() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { loading, error, data, refetch, networkStatus } = useQuery(
-    GET_RECORD,
-    {
-      variables: { _id: slug as string },
-    }
-  );
+  const { loading, error, data, refetch, networkStatus } =
+    useQuery(GET_PENDING_RECORDS);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   useEffect(() => {
     const initializeApp = async () => {
       await dispatch(getLocalStorage());
     };
+
+    if (!user) {
+      toggleModal();
+    }
 
     initializeApp();
   }, [dispatch, user]);
@@ -196,24 +202,16 @@ export default function Slug() {
     return <Error message={error.message} />;
   }
 
-  const record = data.getRecord;
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-    setIsLoading(!isLoading);
-  };
-
-  const handlePayment = async (event: FormEvent) => {
-    event.preventDefault();
-    setIsLoading(!isLoading);
-    toggleModal();
-  };
+  const records = data.getPendingRecords;
   return (
     <Layout>
       <Seo
-        title={`${slug} - Admin | DiceSea`}
+        title="Admin | DiceSea"
         description="DiceSea is an online marketplace for everyone."
       />
+      <Banner title="Admin" backgroundImage="/images/banner.svg" />
+      <Card records={records} title="Pending Record" route="asset" />
+      {user ? null : <Auth isOpen={isModalOpen} onClose={toggleModal} />}
     </Layout>
   );
 }
