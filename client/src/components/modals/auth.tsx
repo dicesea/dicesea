@@ -100,6 +100,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleToggleState = (newState: ModalState) => {
@@ -157,11 +158,11 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   const login = async () => {
     const user = {
-      email,
+      identifier,
       password,
     };
 
-    if (email && password) {
+    if (identifier && password) {
       try {
         setLoading(true);
 
@@ -289,10 +290,10 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   <small>Required</small>
                 </div>
                 <input
-                  type="email"
-                  value={email}
+                  type="setIdentifier"
+                  value={identifier}
                   required
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setIdentifier(e.target.value)}
                 />
                 <div
                   style={{

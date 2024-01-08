@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import { Seo } from "@/components/seo";
 import Layout from "@/components/layout";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NetworkStatus, useMutation, useQuery } from "@apollo/client";
 import Network from "@/components/network";
 import { Progress } from "@/components/progress";
@@ -11,15 +11,12 @@ import Error from "@/components/error";
 import {
   APPROVE_RECORD,
   GET_PENDING_RECORDS,
-  GET_RECORD,
   REJECT_RECORD,
 } from "@/querys/graphql";
-import { capitalizeFirstLetter, shortDid } from "@/utils";
-import Payment from "@/components/modals/payment";
+import { capitalizeFirstLetter } from "@/utils";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { getLocalStorage } from "@/methods/features/marketplaceSlice";
 import Auth from "@/components/modals/auth";
-import Card from "@/components/card";
 import Banner from "@/components/banner";
 import { IRecord } from "@/interfaces";
 import Link from "next/link";
@@ -312,8 +309,6 @@ const ButtonWrapper = styled.div`
 export default function Admin() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const { slug } = router.query;
 
   const { user } = useAppSelector((state: any) => state.marketplace);
   const [isModalOpen, setIsModalOpen] = useState(false);
