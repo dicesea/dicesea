@@ -3,7 +3,7 @@ import Layout from "@/components/layout";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { getLocalStorage } from "@/methods/features/marketplaceSlice";
-import { handleCopy, shortDid } from "@/utils";
+import { deleteToken, handleCopy, shortDid } from "@/utils";
 import { GET_OWNER_RECORDS } from "@/querys/graphql";
 import { NetworkStatus, useQuery } from "@apollo/client";
 import { Progress } from "@/components/progress";
@@ -13,6 +13,7 @@ import Card from "@/components/card";
 import styled from "styled-components";
 import Auth from "@/components/modals/auth";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Z1syfKXsr2 = styled.section`
   width: 100%;
@@ -58,6 +59,8 @@ const G2ERfT5gTR = styled.div`
 
 export default function Profile() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const { user, isLoading } = useAppSelector((state: any) => state.marketplace);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -105,6 +108,14 @@ export default function Profile() {
   }
 
   const records = data.getOwnerRecords;
+
+  const logout = () => {
+    deleteToken();
+    router.push("/");
+    setTimeout(() => {
+      router.reload();
+    }, 500);
+  };
   return (
     <Layout>
       <Seo
@@ -149,7 +160,24 @@ export default function Profile() {
               }}
             >
               <h3 style={{ marginLeft: "20px" }}>Hello, {user?.name}</h3>
-              {user.role === "ADMIN" ? (
+              <button
+                type="button"
+                onClick={logout}
+                style={{
+                  fontWeight: "500",
+                  fontSize: "13px",
+                  marginRight: "20px",
+                  color: "#fff",
+                  border: "1px solid #eee",
+                  borderRadius: "50px",
+                  padding: "10px 20px",
+                  backgroundColor: "transparent",
+                  cursor: "pointer",
+                }}
+              >
+                Log out
+              </button>
+              {/* {user.role === "ADMIN" ? (
                 <Link
                   href="/admin"
                   style={{
@@ -165,7 +193,7 @@ export default function Profile() {
                 >
                   Admin
                 </Link>
-              ) : null}
+              ) : null} */}
             </div>
           ) : null}
         </G2ERfT5gTR>

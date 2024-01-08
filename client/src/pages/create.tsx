@@ -180,7 +180,7 @@ export default function Create() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
-  const [image, setImage] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
   const [price, setPrice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -213,7 +213,7 @@ export default function Create() {
 
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      setImage(e.target.result);
+      setImageUrl(e.target.result);
     };
     reader.readAsDataURL(file);
   };
@@ -221,72 +221,56 @@ export default function Create() {
   // Use the useMutation hook to create data
   const [createRecord, {}] = useMutation(CREATE_RECORD);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const trimmedName = trimInputSpaces(name || "");
-    const trimmedDescription = trimInputSpaces(description || "");
-    const trimmedImage = trimInputSpaces(image || "");
-    const trimmedCategory = trimInputSpaces(category || "");
-    const trimmedPrice = trimInputSpaces(price || "");
+    if (name && description && imageUrl && category && price) {
+      try {
+        setLoading(true);
 
-    if (
-      !trimmedName ||
-      !trimmedDescription ||
-      !trimmedImage ||
-      !trimmedCategory ||
-      !trimmedPrice
-    ) {
-      return toast({
-        message: "Please fill out all fields",
+        const record = {
+          name,
+          description,
+          price,
+          imageUrl,
+          category,
+          creator: user.did,
+          owner: user.did,
+          user: {
+            _id: user._id,
+            did: user.did,
+            name: user.name,
+            email: user.email,
+            description: user.description,
+            profileImage: user.profileImage,
+            bannerImage: user.bannerImage,
+            role: user.role,
+          },
+        };
+
+        const { data } = await createRecord({
+          variables: { record: record },
+        });
+
+        // Check if the operation was successful
+        if (data && data.createRecord) {
+          setLoading(false);
+          toast({ message: "Created sucessfully", position: "bottom" });
+          router.push("/profile");
+          setTimeout(() => {
+            router.reload();
+          }, 500);
+        }
+      } catch (e: any) {
+        console.error(e.message);
+        setLoading(false);
+        toast({ message: e.message, position: "bottom" });
+      }
+    } else {
+      toast({
+        message: "Wrong inputs. Check again",
         position: "bottom",
       });
-    }
-
-    try {
-      setLoading(true);
-
-      const record = {
-        name: trimmedName,
-        description: trimmedDescription,
-        price: trimmedPrice,
-        imageUrl: trimmedImage,
-        category: trimmedCategory,
-        creator: user.did,
-        owner: user.did,
-        user: {
-          _id: user._id,
-          did: user.did,
-          name: user.name,
-          email: user.email,
-          description: user.description,
-          profileImage: user.profileImage,
-          bannerImage: user.bannerImage,
-          role: user.role,
-        },
-      };
-
-      const { data } = await createRecord({
-        variables: { record: record },
-      });
-
-      // Check if the operation was successful
-      if (data && data.createRecord) {
-        toast({ message: "Created sucessfully", position: "bottom" });
-        router.push("/profile");
-        setLoading(false);
-        setTimeout(() => {
-          router.reload();
-        }, 500);
-      } else {
-        // Handle the case where the operation failed
-        toast({ message: "Failed", position: "bottom" });
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-      toast({ message: "Failed", position: "bottom" });
-      setLoading(false);
     }
   };
 
@@ -299,7 +283,7 @@ export default function Create() {
       <SSection>
         <Container>
           <Title>Create New Record</Title>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={submit}>
             <Wrapper>
               <Label htmlFor="image">Image, Video, or Audio</Label>
               <Span>
@@ -313,7 +297,7 @@ export default function Create() {
                   ref={fileInputRef}
                   onChange={onPreview}
                 />
-                {!image && (
+                {!imageUrl && (
                   <Image
                     src="/images/upload.svg"
                     alt="Upload"
@@ -322,9 +306,9 @@ export default function Create() {
                     priority
                   />
                 )}
-                {image && (
+                {imageUrl && (
                   <Image
-                    src={image}
+                    src={imageUrl}
                     alt="Preview"
                     height={100}
                     width={100}

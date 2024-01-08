@@ -5,6 +5,7 @@ import { LOGIN_USER, REGISTER_USER } from "@/querys/graphql";
 import { useMutation } from "@apollo/client";
 import { Web5 } from "@web5/api";
 import { useRouter } from "next/router";
+import { saveToken } from "@/utils";
 
 interface ModalProps {
   isOpen: boolean;
@@ -108,98 +109,84 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [registerUser, {}] = useMutation(REGISTER_USER);
   const [loginUser, {}] = useMutation(LOGIN_USER);
 
-  const handleRegister = async () => {
-    if (!name || !email || !password) {
-      return toast({
-        message: "Fill all the inputs",
-        position: "bottom",
-      });
-    }
-
+  const register = async () => {
     const { did } = await Web5.connect({ sync: "5s" });
 
-    try {
-      setLoading(true);
+    if (did && name && email && password) {
+      try {
+        setLoading(true);
 
-      const user = {
-        did,
-        name,
-        email,
-        password,
-        description: "I love DiceSea",
-        profileImage:
-          "https://scontent.fabb1-1.fna.fbcdn.net/v/t39.30808-6/414713354_312394515117410_8247061755525529656_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeH8K5twdBo06w87zvTNzdHwhfCND8WtCf6F8I0Pxa0J_s0XHphetQBUy_Nvn0yKam_Id_WgHizxV2qZ8ZgH61OD&_nc_ohc=F_FLdbevhVAAX9P8KCE&_nc_zt=23&_nc_ht=scontent.fabb1-1.fna&oh=00_AfB97Z27QupfdObniYZiDI24A91YDdfM8xzfzksNqqpf8A&oe=659D4A47",
-        bannerImage:
-          "https://scontent.fabb1-1.fna.fbcdn.net/v/t39.30808-6/414106955_312347485122113_5568931635377713877_n.png?_nc_cat=101&ccb=1-7&_nc_sid=783fdb&_nc_eui2=AeGOU7cIBm91Oo9nywzuVYT4tpniI_SVUK22meIj9JVQrVUAgMvQlSqlFgIxMY3aZTg8u1VcqTVs6kxDQ-2e89KY&_nc_ohc=jqt80moDdnwAX9fSz3K&_nc_zt=23&_nc_ht=scontent.fabb1-1.fna&oh=00_AfDxOoSZYLdVBzTTgMm39dTqvPG9Y_gv_0NJdeIimz4p7Q&oe=659D3CD2",
-        role: "USER",
-      };
+        const user = {
+          did,
+          name,
+          email,
+          password,
+          description: "I love DiceSea",
+          profileImage:
+            "https://scontent.fabb1-1.fna.fbcdn.net/v/t39.30808-6/414713354_312394515117410_8247061755525529656_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeH8K5twdBo06w87zvTNzdHwhfCND8WtCf6F8I0Pxa0J_s0XHphetQBUy_Nvn0yKam_Id_WgHizxV2qZ8ZgH61OD&_nc_ohc=F_FLdbevhVAAX9P8KCE&_nc_zt=23&_nc_ht=scontent.fabb1-1.fna&oh=00_AfB97Z27QupfdObniYZiDI24A91YDdfM8xzfzksNqqpf8A&oe=659D4A47",
+          bannerImage:
+            "https://scontent.fabb1-1.fna.fbcdn.net/v/t39.30808-6/414106955_312347485122113_5568931635377713877_n.png?_nc_cat=101&ccb=1-7&_nc_sid=783fdb&_nc_eui2=AeGOU7cIBm91Oo9nywzuVYT4tpniI_SVUK22meIj9JVQrVUAgMvQlSqlFgIxMY3aZTg8u1VcqTVs6kxDQ-2e89KY&_nc_ohc=jqt80moDdnwAX9fSz3K&_nc_zt=23&_nc_ht=scontent.fabb1-1.fna&oh=00_AfDxOoSZYLdVBzTTgMm39dTqvPG9Y_gv_0NJdeIimz4p7Q&oe=659D3CD2",
+          role: "USER",
+        };
 
-      const { data } = await registerUser({
-        variables: { user: user },
-      });
+        const { data } = await registerUser({
+          variables: { user: user },
+        });
 
-      if (data && data.registerUser.user) {
-        const user = JSON.stringify(data.registerUser.user);
-
-        localStorage.setItem("user", user);
-
-        toast({ message: "Successful created", position: "bottom" });
-        onClose();
-        setLoading(false);
-        router.reload();
-      } else {
-        toast({ message: "Failed", position: "bottom" });
+        if (data && data.registerUser.user) {
+          saveToken(data.registerUser.user);
+          toast({ message: "Account created", position: "bottom" });
+          setLoading(false);
+          router.reload();
+          setTimeout(() => {
+            onClose();
+          }, 500);
+        }
+      } catch (e: any) {
+        console.error(e.message);
+        toast({
+          message: "Regsiter failed. " + e.message,
+          position: "bottom",
+        });
         setLoading(false);
       }
-    } catch (error: any) {
-      toast({
-        message: error.message,
-        position: "bottom",
-      });
-      setLoading(false);
+    } else {
+      toast({ message: "Wrong inputs. Check again", position: "bottom" });
     }
   };
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      return toast({
-        message: "Please fill out all fields",
-        position: "bottom",
-      });
-    }
+  const login = async () => {
+    const user = {
+      email,
+      password,
+    };
 
-    try {
-      setLoading(true);
+    if (email && password) {
+      try {
+        setLoading(true);
 
-      const user = {
-        email,
-        password,
-      };
+        const { data } = await loginUser({
+          variables: { user: user },
+        });
 
-      const { data } = await loginUser({
-        variables: { user: user },
-      });
-
-      if (data && data.loginUser) {
-        // Convert the object to a JSON string
-        const user = JSON.stringify(data.loginUser.user);
-
-        localStorage.setItem("user", user);
-
-        toast({ message: "Successful logged in", position: "bottom" });
-        onClose();
-        setLoading(false);
-        router.reload();
-      } else {
-        toast({ message: "Failed", position: "bottom" });
+        if (data && data.loginUser) {
+          saveToken(data.loginUser.user);
+          setLoading(false);
+          router.reload();
+          setTimeout(() => {
+            onClose();
+          }, 500);
+        }
+      } catch (e: any) {
+        console.error(e.message);
+        toast({
+          message: "Login failed. " + e.message,
+          position: "bottom",
+        });
         setLoading(false);
       }
-    } catch (error: any) {
-      toast({
-        message: error.message,
-        position: "bottom",
-      });
-      setLoading(false);
+    } else {
+      toast({ message: "Wrong inputs. Check again", position: "bottom" });
     }
   };
 
@@ -269,7 +256,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button disabled={loading} onClick={handleRegister}>
+              <button disabled={loading} onClick={register}>
                 {loading ? "Sending..." : "Send"}
               </button>
             </>
@@ -323,7 +310,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <button disabled={loading} onClick={handleLogin}>
+                <button disabled={loading} onClick={login}>
                   {loading ? "Sending..." : "Send"}
                 </button>
               </>
