@@ -51,6 +51,30 @@ export const GET_APPROVED_RECORDS = gql`
   }
 `;
 
+export const GET_REJECTED_RECORDS = gql`
+  query GetRejectedRecords {
+    getRejectedRecords {
+      _id
+      name
+      description
+      imageUrl
+      price
+      category
+      status
+      owner
+      creator
+      user {
+        _id
+        name
+        description
+        profileImage
+        bannerImage
+        role
+      }
+    }
+  }
+`;
+
 export const GET_PENDING_RECORDS = gql`
   query GetPendingRecords {
     getPendingRecords {
