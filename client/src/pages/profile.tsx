@@ -160,40 +160,44 @@ export default function Profile() {
               }}
             >
               <h3 style={{ marginLeft: "20px" }}>Hello, {user?.name}</h3>
-              <button
-                type="button"
-                onClick={logout}
-                style={{
-                  fontWeight: "500",
-                  fontSize: "13px",
-                  marginRight: "20px",
-                  color: "#fff",
-                  border: "1px solid #eee",
-                  borderRadius: "50px",
-                  padding: "10px 20px",
-                  backgroundColor: "transparent",
-                  cursor: "pointer",
-                }}
-              >
-                Log out
-              </button>
-              {/* {user.role === "ADMIN" ? (
-                <Link
-                  href="/admin"
+              <div>
+                <button
+                  type="button"
+                  onClick={logout}
                   style={{
-                    fontWeight: "400",
-                    fontSize: "12px",
+                    fontWeight: "500",
+                    fontSize: "13px",
                     marginRight: "20px",
                     color: "#fff",
-                    textDecoration: "none",
                     border: "1px solid #eee",
                     borderRadius: "50px",
-                    padding: "5px",
+                    padding: "8px 16px",
+                    backgroundColor: "transparent",
+                    cursor: "pointer",
                   }}
                 >
-                  Admin
-                </Link>
-              ) : null} */}
+                  Log out
+                </button>
+                {user.role === "ADMIN" ? (
+                  <Link
+                    href="/admin"
+                    style={{
+                      fontWeight: "400",
+                      fontSize: "12px",
+                      marginRight: "20px",
+                      color: "#fff",
+                      textDecoration: "none",
+                      border: "1px solid #eee",
+                      borderRadius: "50px",
+                      padding: "8px 16px",
+                      backgroundColor: "transparent",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Admin
+                  </Link>
+                ) : null}
+              </div>
             </div>
           ) : null}
         </G2ERfT5gTR>
