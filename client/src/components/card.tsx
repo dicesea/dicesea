@@ -337,7 +337,7 @@ const Card: React.FC<ICard> = ({ records, title, route }) => {
                       style={{
                         backgroundColor:
                           record.status === "PENDING"
-                            ? "yellow"
+                            ? "#e5bb26"
                             : record.status === "APPROVED"
                             ? "green"
                             : record.status === "REJECTED"
