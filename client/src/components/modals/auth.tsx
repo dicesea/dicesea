@@ -141,7 +141,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           router.reload();
           setTimeout(() => {
             onClose();
-          }, 500);
+          }, 1000);
         }
       } catch (e: any) {
         console.error(e.message);
@@ -176,7 +176,7 @@ const Auth: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           router.reload();
           setTimeout(() => {
             onClose();
-          }, 500);
+          }, 1000);
         }
       } catch (e: any) {
         console.error(e.message);
