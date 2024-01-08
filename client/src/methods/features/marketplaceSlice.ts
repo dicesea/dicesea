@@ -31,7 +31,7 @@ export const getLocalStorage = (): AppThunk => async (dispatch) => {
     dispatch(setLoading(true));
 
     // Retrieve the user JSON string from local storage
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem("ds-token");
 
     // If a user JSON string is found, parse it into an object
     if (user) {

@@ -229,3 +229,19 @@ export const handleCopy = (text: string) => {
     console.log(error);
   }
 };
+
+export const tokenName = "ds-token";
+
+export const saveToken = (token: any) => {
+  localStorage.setItem(tokenName, JSON.stringify(token));
+};
+
+export const retrieveToken = () => {
+  const token = localStorage.getItem(tokenName);
+  if (!token) return null;
+  return JSON.parse(token);
+};
+
+export const deleteToken = () => {
+  localStorage.removeItem(tokenName);
+};
