@@ -49,7 +49,7 @@ const Progress: React.FC = () => {
         }
         return prevProgress + 10;
       });
-    }, 500);
+    }, 1000);
 
     return () => {
       clearInterval(timer);

@@ -368,7 +368,7 @@ export default function Admin() {
         toast({ message: "Sucessfully", position: "bottom" });
         setTimeout(() => {
           router.reload();
-        }, 500);
+        }, 1000);
       }
       setApproveLoading(false);
     } catch (e: any) {
@@ -388,7 +388,7 @@ export default function Admin() {
         toast({ message: "Sucessfully", position: "bottom" });
         setTimeout(() => {
           router.reload();
-        }, 500);
+        }, 1000);
       }
       setApproveLoading(false);
     } catch (e: any) {

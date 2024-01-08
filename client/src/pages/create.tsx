@@ -80,24 +80,36 @@ const Span = styled.span`
 `;
 
 const Form = styled.form`
-  display: grid;
-
   @media (min-width: 414px) {
-    padding: 0px 20px;
+    width: 80% !important;
   }
 
   // Small
   @media (min-width: 360px) {
-    padding: 0px 20px;
+    width: 80%;
   }
 
   // Medium
   @media (min-width: 1280px) {
-    padding: 0px;
+    width: 30% !important;
   }
 `;
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  /* @media (min-width: 414px) {
+    width: 80% !important;
+  }
+
+  // Small
+  @media (min-width: 360px) {
+    width: 80%;
+  }
+
+  // Medium
+  @media (min-width: 1280px) {
+    width: 30% !important;
+  } */
+`;
 
 const Input = styled.input`
   font-size: 16px;
@@ -136,7 +148,7 @@ const ImageWrapper = styled.div`
   justify-content: center;
 
   @media (min-width: 640px) {
-    max-width: 350px;
+    max-width: 370px;
   }
 
   img {
@@ -159,7 +171,6 @@ const FileInput = styled.input`
 
 const Select = styled.select`
   font-size: 1rem;
-
   border: 2px solid rgb(229, 232, 235);
   background-color: transparent;
   border-radius: 10px;
@@ -175,9 +186,9 @@ export default function Create() {
   const dispatch = useAppDispatch();
 
   const { user } = useAppSelector((state: any) => state.marketplace);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -200,6 +211,13 @@ export default function Create() {
 
     initializeApp();
   }, []);
+
+  useEffect(() => {
+    setName(null);
+    setDescription(null);
+    setImageUrl(null);
+    setPrice(null);
+  }, [category]);
 
   const onChange = () => {
     if (fileInputRef.current) {
@@ -259,7 +277,7 @@ export default function Create() {
           router.push("/profile");
           setTimeout(() => {
             router.reload();
-          }, 500);
+          }, 1000);
         }
       } catch (e: any) {
         console.error(e.message);
@@ -282,68 +300,12 @@ export default function Create() {
       />
       <SSection>
         <Container>
-          <Title>Create New Record</Title>
           <Form onSubmit={submit}>
-            <Wrapper>
-              <Label htmlFor="image">Image, Video, or Audio</Label>
-              <Span>
-                File types supported: JPG, PNG, GIF, SVG, MP3. Max size: 100 MB
-              </Span>
-              <ImageWrapper onClick={onChange}>
-                <FileInput
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  ref={fileInputRef}
-                  onChange={onPreview}
-                />
-                {!imageUrl && (
-                  <Image
-                    src="/images/upload.svg"
-                    alt="Upload"
-                    height={100}
-                    width={100}
-                    priority
-                  />
-                )}
-                {imageUrl && (
-                  <Image
-                    src={imageUrl}
-                    alt="Preview"
-                    height={100}
-                    width={100}
-                    priority
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                )}
-              </ImageWrapper>
-            </Wrapper>
-            <Wrapper>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                placeholder="Record name"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
-                }
-              />
-            </Wrapper>
-            <Wrapper>
-              <Label htmlFor="Description">Description</Label>
-              <Textarea
-                placeholder="Record description"
-                rows={3}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Wrapper>
-            <Wrapper>
-              <Label htmlFor="Price">Price</Label>
-              <Input
-                placeholder="Record price"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setPrice(e.target.value)
-                }
-              />
-            </Wrapper>
+            <Title>Create New Record</Title>
+            <Label htmlFor="image">Image, Video, or Audio</Label>
+            <Span>
+              File types supported: JPG, PNG, GIF, SVG, MP3. Max size: 100 MB
+            </Span>
             <Wrapper>
               <Label htmlFor="category">Category</Label>
               <Select
@@ -360,9 +322,73 @@ export default function Create() {
                 ))}
               </Select>
             </Wrapper>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Creating..." : "Create"}
-            </Button>
+            {category === "ART" ? (
+              <>
+                <Wrapper>
+                  <ImageWrapper onClick={onChange}>
+                    <FileInput
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      ref={fileInputRef}
+                      onChange={onPreview}
+                    />
+                    {!imageUrl && (
+                      <Image
+                        src="/images/upload.svg"
+                        alt="Upload"
+                        height={100}
+                        width={100}
+                        priority
+                      />
+                    )}
+                    {imageUrl && (
+                      <Image
+                        src={imageUrl}
+                        alt="Preview"
+                        height={100}
+                        width={100}
+                        priority
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    )}
+                  </ImageWrapper>
+                </Wrapper>
+                <Wrapper>
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    placeholder="Record name"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setName(e.target.value)
+                    }
+                  />
+                </Wrapper>
+                <Wrapper>
+                  <Label htmlFor="Description">Description</Label>
+                  <Textarea
+                    placeholder="Record description"
+                    rows={3}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Wrapper>
+                <Wrapper>
+                  <Label htmlFor="Price">Price</Label>
+                  <Input
+                    placeholder="Record price"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setPrice(e.target.value)
+                    }
+                  />
+                </Wrapper>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Creating..." : "Create"}
+                </Button>
+              </>
+            ) : category === "MUSIC" ? (
+              <h1>MUSIC</h1>
+            ) : category === "BOOK" ? (
+              <h1>BOOK</h1>
+            ) : null}
           </Form>
         </Container>
       </SSection>

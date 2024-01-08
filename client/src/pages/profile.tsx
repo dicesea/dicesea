@@ -114,7 +114,7 @@ export default function Profile() {
     router.push("/");
     setTimeout(() => {
       router.reload();
-    }, 500);
+    }, 1000);
   };
   return (
     <Layout>
