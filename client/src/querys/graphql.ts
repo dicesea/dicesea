@@ -125,7 +125,49 @@ export const GET_OWNER_RECORDS = gql`
 
 export const APPROVE_RECORD = gql`
   mutation ApproveRecord($_id: ID!) {
-    approveRecord(_id: $_id)
+    approveRecord(_id: $_id) {
+      _id
+      name
+      description
+      imageUrl
+      price
+      category
+      status
+      owner
+      creator
+      user {
+        _id
+        name
+        description
+        profileImage
+        bannerImage
+        role
+      }
+    }
+  }
+`;
+
+export const REJECT_RECORD = gql`
+  mutation RejectRecord($_id: ID!) {
+    rejectRecord(_id: $_id) {
+      _id
+      name
+      description
+      imageUrl
+      price
+      category
+      status
+      owner
+      creator
+      user {
+        _id
+        name
+        description
+        profileImage
+        bannerImage
+        role
+      }
+    }
   }
 `;
 
