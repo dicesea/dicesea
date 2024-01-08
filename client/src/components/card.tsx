@@ -291,7 +291,7 @@ const Title = styled.h1`
 const Paragragh = styled.p`
   color: #717171 !important;
   font-weight: 400 !important;
-  font-size: 12px;
+  font-size: 13px !important;
   line-height: 20px;
   margin: 0px !important;
 `;
@@ -310,8 +310,30 @@ const Rhsgstab = styled.div`
   border-radius: 50px;
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+
+  button {
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 12px;
+    border: 0px;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+  }
+`;
+
 const Card: React.FC<ICard> = ({ records, title, route }) => {
   const router = useRouter();
+
+  const approve = () => {};
+
+  const reject = () => {};
+
   return (
     <Section>
       <Heading>{title}</Heading>
@@ -332,7 +354,7 @@ const Card: React.FC<ICard> = ({ records, title, route }) => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Title>{record.name}</Title>
-                  {router.asPath === "/profile" ? (
+                  {router.asPath === "/profile" || "/admin" ? (
                     <Rhsgstab
                       style={{
                         backgroundColor:
@@ -351,6 +373,26 @@ const Card: React.FC<ICard> = ({ records, title, route }) => {
                 </div>
                 <Paragragh>{record.description}</Paragragh>
                 <Price>${record.price}</Price>
+                {router.asPath === "/admin" ? (
+                  <ButtonWrapper>
+                    <button
+                      onClick={approve}
+                      style={{
+                        backgroundColor: "green",
+                      }}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={reject}
+                      style={{
+                        backgroundColor: "red",
+                      }}
+                    >
+                      Reject
+                    </button>
+                  </ButtonWrapper>
+                ) : null}
               </CardContent>
             </Link>
           </CardWrapper>
