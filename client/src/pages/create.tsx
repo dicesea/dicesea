@@ -385,9 +385,13 @@ export default function Create() {
                 </Button>
               </>
             ) : category === "MUSIC" ? (
-              <h1>MUSIC</h1>
+              <div>
+                <h1>Coming soon</h1>
+              </div>
             ) : category === "BOOK" ? (
-              <h1>BOOK</h1>
+              <div>
+                <h1>Coming soon</h1>
+              </div>
             ) : null}
           </Form>
         </Container>

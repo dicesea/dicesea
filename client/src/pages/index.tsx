@@ -49,7 +49,7 @@ export default function Home() {
         title="DiceSea, the online marketplace for everyone"
         description="DiceSea is an online marketplace for everyone."
       />
-      <Frame videoId="ELqDZKsmQhk" />
+      <Frame videoId="kZUEOpBqnBs" />
       <Card records={filteredArtRecords} title="Art Category" route="asset" />
       <Card
         records={filteredMusicRecords}
