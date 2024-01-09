@@ -287,7 +287,11 @@ export default function Slug() {
               </Button>
             )}
             {user ? (
-              <Payment isOpen={isModalOpen} onClose={toggleModal} />
+              <Payment
+                isOpen={isModalOpen}
+                onClose={toggleModal}
+                record={record}
+              />
             ) : (
               <Auth isOpen={isModalOpen} onClose={toggleModal} />
             )}

@@ -3,13 +3,15 @@ import styled from "styled-components";
 import { toast } from "../toast";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
-import { SEND_PAYMENT } from "@/querys/graphql";
+import { CREATE_RECORD, SEND_PAYMENT } from "@/querys/graphql";
 import { useAppDispatch, useAppSelector } from "@/methods/app/hooks";
 import { getLocalStorage } from "@/methods/features/marketplaceSlice";
+import { IRecord } from "@/interfaces";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  record: IRecord;
 }
 
 const Container = styled.div<{ isOpen: boolean }>`
@@ -76,7 +78,7 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
-const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+const Payment: React.FC<ModalProps> = ({ isOpen, onClose, record }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -106,57 +108,95 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   }, []);
 
   const [sendPayment, {}] = useMutation(SEND_PAYMENT);
+  const [createRecord, {}] = useMutation(CREATE_RECORD);
 
-  const handlePay = async () => {
-    if (!cardName || !cardNumber || !expiryDate || !cvcNumber) {
-      return toast({
-        message: "Please fill out all fields",
-        position: "bottom",
-      });
-    }
+  const submit = async () => {
+    // Validate required fields
+    if (
+      cardName &&
+      cardNumber &&
+      expiryDate &&
+      cvcNumber &&
+      record._id &&
+      record.name &&
+      record.description &&
+      record.imageUrl &&
+      record.category &&
+      record.price
+    ) {
+      try {
+        setLoading(true);
 
-    try {
-      setLoading(true);
+        // Perform payment processing
+        const paymentDetails = {
+          cardName,
+          cardNumber,
+          expiryDate,
+          cvcNumber,
+          cardAmount: record.price,
+          user: {
+            _id: user._id,
+            did: user.did,
+            name: user.did,
+            email: user.email,
+            role: user.role,
+          },
+        };
 
-      const detail = {
-        cardName,
-        cardNumber,
-        expiryDate,
-        cvcNumber,
-        user: {
-          _id: user._id,
-          did: user.did,
-          name: user.did,
-          email: user.email,
-          role: user.role,
-        },
-      };
+        const { data } = await sendPayment({
+          variables: { detail: paymentDetails },
+        });
 
-      const { data } = await sendPayment({
-        variables: { detail: detail },
-      });
+        // Check if the payment operation was successful
+        if (data && data.sendPayment) {
+          const duplicateRecord = {
+            name: record.name,
+            description: record.description,
+            price: record.price,
+            imageUrl: record.imageUrl,
+            category: record.category,
+            creator: record.user.did,
+            owner: user.did,
+            user: {
+              _id: user._id,
+              did: user.did,
+              name: user.name,
+              email: user.email,
+              description: user.description,
+              profileImage: user.profileImage,
+              bannerImage: user.bannerImage,
+              role: user.role,
+            },
+          };
 
-      // Check if the operation was successful
-      if (data && data.sendPayment) {
-        toast({ message: "Successful paid", position: "bottom" });
-        setLoading(false);
+          // Create the duplicate record
+          await createRecord({
+            variables: { record: duplicateRecord },
+          });
 
-        // Perform any additional actions after successful creation
-        router.push("/profile");
-        setLoading(false);
-        onClose();
-        router.reload();
-      } else {
-        // Handle the case where the operation failed
-        toast({ message: "Failed", position: "bottom" });
+          // Perform any additional actions after successful creation
+          toast({ message: "Payment successful", position: "bottom" });
+          router.push("/profile");
+          setLoading(false);
+          setTimeout(() => {
+            router.reload();
+          }, 1000);
+          // onClose();
+        } else {
+          // Handle the case where the payment operation failed
+          toast({ message: "Payment failed", position: "bottom" });
+          setLoading(false);
+        }
+      } catch (e: any) {
+        console.error(e.message);
+        toast({ message: e.message, position: "bottom" });
         setLoading(false);
       }
-    } catch (e) {
+    } else {
       toast({
-        message: "Failed",
+        message: "Wrong data. Check again",
         position: "bottom",
       });
-      setLoading(false);
     }
   };
 
@@ -269,7 +309,7 @@ const Payment: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
           </div>
-          <button onClick={handlePay}>{loading ? "Sending..." : "Send"}</button>
+          <button onClick={submit}>{loading ? "Sending..." : "Send"}</button>
         </div>
       </ModalContent>
     </Container>
