@@ -236,19 +236,17 @@ export const LOGIN_USER = gql`
 export const SEND_PAYMENT = gql`
   mutation SendPayment($detail: PaymentDetail!) {
     sendPayment(detail: $detail) {
-      detail {
+      cardName
+      cardNumber
+      expiryDate
+      cvcNumber
+      cardAmount
+      user {
         _id
-        cardName
-        cardNumber
-        expiryDate
-        cvcNumber
-        user {
-          _id
-          did
-          name
-          email
-          role
-        }
+        did
+        name
+        email
+        role
       }
     }
   }
